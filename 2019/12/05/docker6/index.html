@@ -1,0 +1,144 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><title>6. Viết docker-compose để khởi chạy multi container | Eopi Blog</title><meta name="description" content="6. Viết docker-compose để khởi chạy multi container"><meta name="keywords" content="Docker,Virtual Machine"><meta name="author" content="Eopi Noriko"><meta name="copyright" content="Eopi Noriko"><meta name="format-detection" content="telephone=no"><link rel="shortcut icon" href="/img/favicon.ico"><link rel="preconnect" href="//cdn.jsdelivr.net"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="6. Viết docker-compose để khởi chạy multi container"><meta name="twitter:description" content="6. Viết docker-compose để khởi chạy multi container"><meta name="twitter:image" content="https://eopi.loliteam.net/img/docker.png"><meta property="og:type" content="article"><meta property="og:title" content="6. Viết docker-compose để khởi chạy multi container"><meta property="og:url" content="https://eopi.loliteam.net/2019/12/05/docker6/"><meta property="og:site_name" content="Eopi Blog"><meta property="og:description" content="6. Viết docker-compose để khởi chạy multi container"><meta property="og:image" content="https://eopi.loliteam.net/img/docker.png"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><script src="https://cdn.jsdelivr.net/npm/js-cookie/dist/js.cookie.min.js"></script><script>const autoChangeMode = 'false'
+var t = Cookies.get("theme");
+if (autoChangeMode == '1'){
+const isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches
+const isLightMode = window.matchMedia("(prefers-color-scheme: light)").matches
+const isNotSpecified = window.matchMedia("(prefers-color-scheme: no-preference)").matches
+const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+if (t === undefined){
+  if (isLightMode) activateLightMode()
+  else if (isDarkMode) activateDarkMode()
+  else if (isNotSpecified || hasNoSupport){
+    console.log('You specified no preference for a color scheme or your browser does not support it. I Schedule dark mode during night time.')
+    now = new Date();
+    hour = now.getHours();
+    isNight = hour < 6 || hour >= 18
+    isNight ? activateDarkMode() : activateLightMode()
+}
+} else if (t == 'light') activateLightMode()
+else activateDarkMode()
+
+
+} else if (autoChangeMode == '2'){
+  now = new Date();
+  hour = now.getHours();
+  isNight = hour < 6 || hour >= 18
+  if(t === undefined) isNight? activateDarkMode() : activateLightMode()
+  else if (t === 'light') activateLightMode()
+  else activateDarkMode() 
+} else {
+  if ( t == 'dark' ) activateDarkMode()
+  else if ( t == 'light') activateLightMode()
+}
+
+function activateDarkMode(){
+  document.documentElement.setAttribute('data-theme', 'dark')
+  if (document.querySelector('meta[name="theme-color"]') !== null){
+    document.querySelector('meta[name="theme-color"]').setAttribute('content','#000')
+  }
+}
+function activateLightMode(){
+  document.documentElement.setAttribute('data-theme', 'light')
+  if (document.querySelector('meta[name="theme-color"]') !== null){
+  document.querySelector('meta[name="theme-color"]').setAttribute('content','#fff')
+  }
+}</script><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.15/dist/snackbar.min.css"><link rel="canonical" href="https://eopi.loliteam.net/2019/12/05/docker6/"><link rel="prev" title="7. Thao tác với images" href="/https:/eopi.loliteam.net/2019/12/05/docker7/"><link rel="next" title="5. Network trong docker" href="/https:/eopi.loliteam.net/2019/12/05/docker5/"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Titillium+Web"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"Chúng tôi không tìm thấy bất kỳ kết quả nào cho tìm kiếm: ${query}"}},
+  translate: undefined,
+  highlight_copy: 'true',
+  highlight_lang: 'true',
+  highlight_shrink: 'false',
+  copy: {
+    success: 'Sao chép thành công',
+    error: 'Sao chép lỗi',
+    noSupport: 'Trình duyệt không hỗ trợ'
+  },
+  bookmark: {
+    title: 'Snackbar.bookmark.title',
+    message_prev: 'Nhấn',
+    message_next: 'để đánh dấu trang này'
+  },
+  runtime_unit: 'days',
+  copyright: undefined,
+  copy_copyright_js: false,
+  ClickShowText: {"text":"Eopi,LoLi,Shiina","fontSize":"15px"},
+  medium_zoom: 'true',
+  Snackbar: {"bookmark":{"title":"Snackbar.bookmark.title","message_prev":"Nhấn","message_next":"để đánh dấu trang này"},"chs_to_cht":"Traditional Chinese Activated Manually","cht_to_chs":"Simplified Chinese Activated Manually","day_to_night":"Light Mode Activated Manually","night_to_day":"Dark Mode Activated Manually","bgLight":"#49b1f5","bgDark":"#2d3035","position":"bottom-left"}
+  
+}</script></head><body><div id="header"> <div id="page-header"><span class="pull_left" id="blog_name"><a class="blog_title" id="site-name" href="/">Eopi Blog</a></span><i class="fa fa-bars fa-fw toggle-menu pull_right close" aria-hidden="true"></i><span class="pull_right menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> Archives</span></a></div></div></span><span class="pull_right" id="search_button"><a class="site-page social-icon search"><i class="fa fa-search fa-fw"></i><span> Search</span></a></span></div></div><div id="mobile-sidebar"><div id="menu_mask"></div><div id="mobile-sidebar-menus"><div class="mobile_author_icon"><img class="lazyload avatar_img" src="/img/avatar.jpg" onerror="onerror=null;src='/img/friend_404.gif'"></div><div class="mobile_post_data"><div class="mobile_data_item is_center"><div class="mobile_data_link"><a href="/archives/"><div class="headline">Articles</div><div class="length_num">14</div></a></div></div><div class="mobile_data_item is_center">      <div class="mobile_data_link"><a href="/tags/"><div class="headline">Tags</div><div class="length_num">9</div></a></div></div></div><hr><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> Archives</span></a></div></div></div><div id="mobile-sidebar-toc"><div class="toc_mobile_headline">Mục lục</div><ol class="toc_mobile_items"><li class="toc_mobile_items-item toc_mobile_items-level-1"><a class="toc_mobile_items-link" href="#Docker-Compose"><span class="toc_mobile_items-number">1.</span> <span class="toc_mobile_items-text">Docker Compose</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-1"><a class="toc_mobile_items-link" href="#1-Cai-dat"><span class="toc_mobile_items-number">2.</span> <span class="toc_mobile_items-text">1. Cài đặt</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-1"><a class="toc_mobile_items-link" href="#2-Vi-du-chay-wordpress"><span class="toc_mobile_items-number">3.</span> <span class="toc_mobile_items-text">2. Ví dụ chạy wordpress.</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-1"><a class="toc_mobile_items-link" href="#3-Mot-vai-chu-y"><span class="toc_mobile_items-number">4.</span> <span class="toc_mobile_items-text">3. Một vài chú ý:</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-1"><a class="toc_mobile_items-link" href="#References"><span class="toc_mobile_items-number">5.</span> <span class="toc_mobile_items-text">References</span></a></li></ol></div></div><div id="body-wrap"><div id="web_bg" data-type="color"></div><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true">     </i><div class="auto_open" id="sidebar"><div class="sidebar-toc"><div class="sidebar-toc__title">Mục lục</div><div class="sidebar-toc__progress"><span class="progress-notice">Bạn đã đọc</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar">     </div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Docker-Compose"><span class="toc-number">1.</span> <span class="toc-text">Docker Compose</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-Cai-dat"><span class="toc-number">2.</span> <span class="toc-text">1. Cài đặt</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-Vi-du-chay-wordpress"><span class="toc-number">3.</span> <span class="toc-text">2. Ví dụ chạy wordpress.</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-Mot-vai-chu-y"><span class="toc-number">4.</span> <span class="toc-text">3. Một vài chú ý:</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#References"><span class="toc-number">5.</span> <span class="toc-text">References</span></a></li></ol></div></div></div><div id="content-outer"><div id="top-container" style="background-image: url(/img/docker.png)"><div id="post-info"><div id="post-title"><div class="posttitle">6. Viết docker-compose để khởi chạy multi container</div></div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> Created 2019-12-05<span class="post-meta__separator">|</span><i class="fa fa-history" aria-hidden="true"></i> Updated 2019-12-05</time><div class="post-meta-wordcount"><i class="fa fa-eye post-meta__icon" aria-hidden="true">       </i><span>Post View: </span><span id="busuanzi_value_page_pv"></span></div></div></div></div><div class="layout layout_post" id="content-inner">   <article id="post"><div class="article-container" id="post-content"><h1 id="Docker-Compose"><a href="#Docker-Compose" class="headerlink" title="Docker Compose"></a>Docker Compose</h1><ul>
+<li><p>Compose là công cụ giúp định nghĩa và khởi chạy multi-container Docker applications.</p>
+</li>
+<li><p>Chỉ với một câu lệnh, ta có thể dễ dàng create và start toàn bộ các services phục vụ cho việc chạy ứng dụng.</p>
+</li>
+<li><p>Việc sử dụng Docker Compose được tóm lược trong 3 bước cơ bản sau:</p>
+<ul>
+<li>Khai báo app’s environment với Dockerfile.</li>
+<li>Khai báo các services cần thiết để chạy app trong docker-compose.yml.</li>
+<li>Run docker-compose up và Compose sẽ start và run app.</li>
+</ul>
+</li>
+</ul>
+<h1 id="1-Cai-dat"><a href="#1-Cai-dat" class="headerlink" title="1. Cài đặt"></a>1. Cài đặt</h1><ul>
+<li>Install using pip<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">$ pip install docker-compose</span></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p>Hoặc bạn có thể sử dụng cách khác: </p>
+<ul>
+<li>Install as a container<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">$ curl -L https://github.com/docker/compose/releases/download/1.11.2/run.sh &gt; /usr/<span class="built_in">local</span>/bin/docker-compose</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">$ chmod +x /usr/<span class="built_in">local</span>/bin/docker-compose</span></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h1 id="2-Vi-du-chay-wordpress"><a href="#2-Vi-du-chay-wordpress" class="headerlink" title="2. Ví dụ chạy wordpress."></a>2. Ví dụ chạy wordpress.</h1><p>Chúng ta sẽ tạo ra 2 containers, 1 containers chứa mã nguồn wordpress và 1 containers chưa cơ sở dữ liệu mysql. Bằng cách định nghĩa trong file compose. Chỉ với 1 dòng lệnh khởi tạo, docker sẽ lập tức tạo ra 2 containers và sẵn sàng cho chúng ta dựng lên wordpress, một cách nhanh chóng.</p>
+<ul>
+<li><p>Đoạn mã compose: Viết theo cú pháp <strong>YAML</strong>.</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">version: <span class="string">'2'</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">services:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">   db:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">     image: mysql:5.7</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">     volumes:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">       - ./data:/var/lib/mysql</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">     restart: always</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">     environment:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">       MYSQL_ROOT_PASSWORD: wordpress</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">       MYSQL_DATABASE: wordpress</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line">       MYSQL_USER: wordpress</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line">       MYSQL_PASSWORD: wordpress</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">15</span></pre></td><td class="code"><pre><span class="line">   wordpress:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">16</span></pre></td><td class="code"><pre><span class="line">     depends_on:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">17</span></pre></td><td class="code"><pre><span class="line">       - db</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">18</span></pre></td><td class="code"><pre><span class="line">     image: wordpress:latest</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">19</span></pre></td><td class="code"><pre><span class="line">     ports:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">20</span></pre></td><td class="code"><pre><span class="line">       - <span class="string">"8000:80"</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">21</span></pre></td><td class="code"><pre><span class="line">     restart: always</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">22</span></pre></td><td class="code"><pre><span class="line">     environment:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">23</span></pre></td><td class="code"><pre><span class="line">       WORDPRESS_DB_HOST: db:3306</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">24</span></pre></td><td class="code"><pre><span class="line">       WORDPRESS_DB_PASSWORD: wordpress</span></pre></td></tr></table></figure>
+</li>
+<li><p><code>version: &#39;2&#39;</code>: Chỉ ra phiên bản docker-compose sẽ sử dụng.</p>
+</li>
+<li><p><code>services:</code>: Trong mục services, chỉ ra những services (containers) mà ta sẽ cài đặt. Ở đây, tạo sẽ tạo ra services tương ứng với 2 containers là db và wordpress.</p>
+</li>
+<li><p>Trong services db: </p>
+<ul>
+<li>image: chỉ ra image sẽ được sử dụng để create containers. Ngoài ra, bạn có thể viết dockerfile và khai báo lệnh <code>build</code> để containers sẽ được create từ dockerfile.</li>
+<li>volumes: mount thư mục data trên host (cùng thư mục cha chứa file docker-compose) với thư mục /var/lib/mysql trong container.</li>
+<li>restart: always: Tự động khởi chạy khi container bị shutdown.</li>
+<li>environment: Khai báo các biến môi trường cho container. Cụ thể là thông tin cơ sở dữ liệu.</li>
+</ul>
+</li>
+<li><p>Trong services wordpress:</p>
+<ul>
+<li>depends_on: db: Chỉ ra sự phụ thuộc của services wordpress với services db. Tức là services db phải chạy và tạo ra trước, thì services wordpress mới chạy.</li>
+<li>ports: Forwards the exposed port 80 của container sang port 8000 trên host machine.</li>
+<li>environment: Khai báo các biến môi trường. Sau khi tạo ra db ở container trên, thì sẽ lấy thông tin đấy để cung cấp cho container wordpress (chứa source code).</li>
+</ul>
+</li>
+<li><p>Khởi chạy</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">root@adk:/opt/<span class="built_in">test</span>/data<span class="comment"># docker-compose up</span></span></pre></td></tr></table></figure></li>
+<li><p>Kết quả</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">root@adk:/opt/<span class="built_in">test</span>/data<span class="comment"># docker-compose ps</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">      Name                    Command               State          Ports         </span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">--------------------------------------------------------------------------------</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">test_db_1          docker-entrypoint.sh mysqld      Up      3306/tcp             </span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">test_wordpress_1   docker-entrypoint.sh apach ...   Up      0.0.0.0:8080-&gt;80/tcp </span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">root@adk:/opt/<span class="built_in">test</span>/data<span class="comment">#</span></span></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">root@adk:/opt/<span class="built_in">test</span>/data<span class="comment"># docker ps -a</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                    NAMES</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">54cfd8a41b73        wordpress:latest    <span class="string">"docker-entrypoint..."</span>   7 minutes ago       Up 7 minutes        0.0.0.0:8080-&gt;80/tcp     test_wordpress_1</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">68460ffee3c4        mysql:5.7           <span class="string">"docker-entrypoint..."</span>   7 minutes ago       Up 7 minutes        3306/tcp                 test_db_1</span></pre></td></tr></table></figure>
+
+<h1 id="3-Mot-vai-chu-y"><a href="#3-Mot-vai-chu-y" class="headerlink" title="3. Một vài chú ý:"></a>3. Một vài chú ý:</h1><ul>
+<li>dockerfile dùng để build các image.</li>
+<li>docker-compose dùng để build và run các container.</li>
+<li>docker-compose viết theo cú pháp <strong>YAML</strong>, các lệnh khai báo trong docker-compose gần tương tự với thao tác chạy container <code>docker run</code>.</li>
+<li>docker-compose cung chấp chức năng <code>Horizontally scaled</code>, cho phép ta tạo ra nhiều container giống nhau một cách nhanh chóng. Bằng cách sử dụng lệnh<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker-compose scale name_service=5</span></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p>Trong đó, <strong>name_service</strong> là tên services cần tạo container. <strong>5</strong> là số container sẽ được tạo ra.</p>
+<h1 id="References"><a href="#References" class="headerlink" title="References"></a>References</h1><ul>
+<li><a href="https://viblo.asia/euclid/posts/DXOkRZYwkdZ" target="_blank" rel="noopener">https://viblo.asia/euclid/posts/DXOkRZYwkdZ</a></li>
+<li><a href="https://docs.docker.com/compose/wordpress/#define-the-project" target="_blank" rel="noopener">https://docs.docker.com/compose/wordpress/#define-the-project</a></li>
+</ul>
+</div></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="mailto:undefined" target="_blank" rel="noopener">Eopi Noriko</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="/https:/eopi.loliteam.net/2019/12/05/docker6/">https://eopi.loliteam.net/2019/12/05/docker6/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Docker/">Docker    </a><a class="post-meta__tags" href="/tags/Virtual-Machine/">Virtual Machine    </a></div><div class="post_share"><div class="social-share" data-image="/img/docker.png" data-sites="facebook,twitter"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/css/share.min.css"><script src="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/js/social-share.min.js"></script></div></div><nav class="pagination_post" id="pagination"><div class="prev-post pull_left"><a href="/2019/12/05/docker7/"><img class="prev_cover lazyload" data-src="/img/docker.png" onerror="onerror=null;src='/img/404.jpg'"><div class="label">Bài đăng trước</div><div class="prev_info"><span>7. Thao tác với images</span></div></a></div><div class="next-post pull_right"><a href="/2019/12/05/docker5/"><img class="next_cover lazyload" data-src="/img/docker.png" onerror="onerror=null;src='/img/404.jpg'"><div class="label">Bài tiếp theo</div><div class="next_info"><span>5. Network trong docker</span></div></a></div></nav><div class="relatedPosts"><div class="relatedPosts_headline"><i class="fa fa-fw fa-thumbs-up" aria-hidden="true"></i><span> Recommend</span></div><div class="relatedPosts_list"><div class="relatedPosts_item"><a href="/2019/12/05/docker1/" title="1. Cài đặt docker engine cơ bản (Cài đặt môi trường lab)"><img class="relatedPosts_cover lazyload"data-src="/img/docker.png"><div class="relatedPosts_title">1. Cài đặt docker engine cơ bản (Cài đặt môi trường lab)</div></a></div><div class="relatedPosts_item"><a href="/2019/12/05/docker2/" title="2. Các ghi chép cần chú ý về docker"><img class="relatedPosts_cover lazyload"data-src="/img/docker.png"><div class="relatedPosts_title">2. Các ghi chép cần chú ý về docker</div></a></div><div class="relatedPosts_item"><a href="/2019/12/05/docker3/" title="3. Docker image"><img class="relatedPosts_cover lazyload"data-src="/img/docker.png"><div class="relatedPosts_title">3. Docker image</div></a></div></div><div class="clear_both"></div></div></div></div><footer id="footer" style="background-image: url(/img/docker.png)"><div id="footer-wrap"><div class="copyright">&copy;2019 By Eopi Noriko</div><div class="framework-info"><span>Driven </span><a href="http://hexo.io" target="_blank" rel="noopener"><span>Hexo</span></a><span class="footer-separator">|</span><span>Theme </span><a href="https://github.com/jerryc127/hexo-theme-butterfly" target="_blank" rel="noopener"><span>Butterfly</span></a></div></div></footer></div><section class="rightside" id="rightside"><div id="rightside-config-hide"><i class="fa fa-book" id="readmode" title="Read Mode"></i><i class="fa fa-plus" id="font_plus" title="Increase font size"></i><i class="fa fa-minus" id="font_minus" title="Decrease font size"></i><i class="darkmode fa fa-moon-o" id="darkmode" title="Dark Mode"></i></div><div id="rightside-config-show"><div id="rightside_config" title="Setting"><i class="fa fa-cog" aria-hidden="true"></i></div><i class="fa fa-list-ul close" id="mobile-toc-button" title="Table of Contents" aria-hidden="true"></i><i class="fa fa-arrow-up" id="go-up" title="Back to top" aria-hidden="true"></i></div></section><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/medium-zoom/dist/medium-zoom.min.js"></script><script async src="/js/search/local-search.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.15/dist/snackbar.min.js"></script><script id="ribbon" src="/js/third-party/canvas-ribbon.js" size="150" alpha="0.7" zIndex="-1" mobile="true" data-click="true"></script><script id="ribbon_piao" mobile="true" src="/js/third-party/piao.js"></script><script id="canvas_nest" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="/js/third-party/canvas-nest.js"></script><script src="/js/third-party/activate-power-mode.js"></script><script>POWERMODE.colorful = true; // make power mode colorful
+POWERMODE.shake = true; // turn off shake
+document.body.addEventListener('input', POWERMODE);
+</script><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@latest/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/lazysizes@latest/lazysizes.min.js" async=""></script><script src="/js/third-party/click_heart.js"></script><script src="/js/third-party/ClickShowText.js"></script><div class="search-dialog" id="local-search"><div class="search-dialog__title" id="local-search-title">Tìm Kiếm</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="Tìm kiếm Bài viết"></div></div></div><hr><div id="local-search-results"><div id="local-hits"></div><div id="local-stats"><div class="local-search-stats__hr" id="hr"><span>Powered by</span> <a href="https://github.com/wzpan/hexo-generator-search" target="_blank" rel="noopener" style="color:#49B1F5;">hexo-generator-search</a></div></div></div><span class="search-close-button"><i class="fa fa-times"></i></span></div><div class="search-mask"></div></body></html>

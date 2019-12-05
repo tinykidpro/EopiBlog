@@ -1,0 +1,320 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><title>2. Các ghi chép cần chú ý về docker | Eopi Blog</title><meta name="description" content="2. Các ghi chép cần chú ý về docker"><meta name="keywords" content="Docker,Virtual Machine"><meta name="author" content="Eopi Noriko"><meta name="copyright" content="Eopi Noriko"><meta name="format-detection" content="telephone=no"><link rel="shortcut icon" href="/img/favicon.ico"><link rel="preconnect" href="//cdn.jsdelivr.net"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="2. Các ghi chép cần chú ý về docker"><meta name="twitter:description" content="2. Các ghi chép cần chú ý về docker"><meta name="twitter:image" content="https://eopi.loliteam.net/img/docker.png"><meta property="og:type" content="article"><meta property="og:title" content="2. Các ghi chép cần chú ý về docker"><meta property="og:url" content="https://eopi.loliteam.net/2019/12/05/docker2/"><meta property="og:site_name" content="Eopi Blog"><meta property="og:description" content="2. Các ghi chép cần chú ý về docker"><meta property="og:image" content="https://eopi.loliteam.net/img/docker.png"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><script src="https://cdn.jsdelivr.net/npm/js-cookie/dist/js.cookie.min.js"></script><script>const autoChangeMode = 'false'
+var t = Cookies.get("theme");
+if (autoChangeMode == '1'){
+const isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches
+const isLightMode = window.matchMedia("(prefers-color-scheme: light)").matches
+const isNotSpecified = window.matchMedia("(prefers-color-scheme: no-preference)").matches
+const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+if (t === undefined){
+  if (isLightMode) activateLightMode()
+  else if (isDarkMode) activateDarkMode()
+  else if (isNotSpecified || hasNoSupport){
+    console.log('You specified no preference for a color scheme or your browser does not support it. I Schedule dark mode during night time.')
+    now = new Date();
+    hour = now.getHours();
+    isNight = hour < 6 || hour >= 18
+    isNight ? activateDarkMode() : activateLightMode()
+}
+} else if (t == 'light') activateLightMode()
+else activateDarkMode()
+
+
+} else if (autoChangeMode == '2'){
+  now = new Date();
+  hour = now.getHours();
+  isNight = hour < 6 || hour >= 18
+  if(t === undefined) isNight? activateDarkMode() : activateLightMode()
+  else if (t === 'light') activateLightMode()
+  else activateDarkMode() 
+} else {
+  if ( t == 'dark' ) activateDarkMode()
+  else if ( t == 'light') activateLightMode()
+}
+
+function activateDarkMode(){
+  document.documentElement.setAttribute('data-theme', 'dark')
+  if (document.querySelector('meta[name="theme-color"]') !== null){
+    document.querySelector('meta[name="theme-color"]').setAttribute('content','#000')
+  }
+}
+function activateLightMode(){
+  document.documentElement.setAttribute('data-theme', 'light')
+  if (document.querySelector('meta[name="theme-color"]') !== null){
+  document.querySelector('meta[name="theme-color"]').setAttribute('content','#fff')
+  }
+}</script><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.15/dist/snackbar.min.css"><link rel="canonical" href="https://eopi.loliteam.net/2019/12/05/docker2/"><link rel="prev" title="3. Docker image" href="/https:/eopi.loliteam.net/2019/12/05/docker3/"><link rel="next" title="1. Cài đặt docker engine cơ bản (Cài đặt môi trường lab)" href="/https:/eopi.loliteam.net/2019/12/05/docker1/"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Titillium+Web"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"Chúng tôi không tìm thấy bất kỳ kết quả nào cho tìm kiếm: ${query}"}},
+  translate: undefined,
+  highlight_copy: 'true',
+  highlight_lang: 'true',
+  highlight_shrink: 'false',
+  copy: {
+    success: 'Sao chép thành công',
+    error: 'Sao chép lỗi',
+    noSupport: 'Trình duyệt không hỗ trợ'
+  },
+  bookmark: {
+    title: 'Snackbar.bookmark.title',
+    message_prev: 'Nhấn',
+    message_next: 'để đánh dấu trang này'
+  },
+  runtime_unit: 'days',
+  copyright: undefined,
+  copy_copyright_js: false,
+  ClickShowText: {"text":"Eopi,LoLi,Shiina","fontSize":"15px"},
+  medium_zoom: 'true',
+  Snackbar: {"bookmark":{"title":"Snackbar.bookmark.title","message_prev":"Nhấn","message_next":"để đánh dấu trang này"},"chs_to_cht":"Traditional Chinese Activated Manually","cht_to_chs":"Simplified Chinese Activated Manually","day_to_night":"Light Mode Activated Manually","night_to_day":"Dark Mode Activated Manually","bgLight":"#49b1f5","bgDark":"#2d3035","position":"bottom-left"}
+  
+}</script></head><body><div id="header"> <div id="page-header"><span class="pull_left" id="blog_name"><a class="blog_title" id="site-name" href="/">Eopi Blog</a></span><i class="fa fa-bars fa-fw toggle-menu pull_right close" aria-hidden="true"></i><span class="pull_right menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> Archives</span></a></div></div></span><span class="pull_right" id="search_button"><a class="site-page social-icon search"><i class="fa fa-search fa-fw"></i><span> Search</span></a></span></div></div><div id="mobile-sidebar"><div id="menu_mask"></div><div id="mobile-sidebar-menus"><div class="mobile_author_icon"><img class="lazyload avatar_img" src="/img/avatar.jpg" onerror="onerror=null;src='/img/friend_404.gif'"></div><div class="mobile_post_data"><div class="mobile_data_item is_center"><div class="mobile_data_link"><a href="/archives/"><div class="headline">Articles</div><div class="length_num">14</div></a></div></div><div class="mobile_data_item is_center">      <div class="mobile_data_link"><a href="/tags/"><div class="headline">Tags</div><div class="length_num">9</div></a></div></div></div><hr><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> Archives</span></a></div></div></div><div id="mobile-sidebar-toc"><div class="toc_mobile_headline">Mục lục</div><ol class="toc_mobile_items"><li class="toc_mobile_items-item toc_mobile_items-level-1"><a class="toc_mobile_items-link" href="#1-Gioi-thieu-ve-Docker"><span class="toc_mobile_items-number">1.</span> <span class="toc_mobile_items-text">1. Giới thiệu về Docker</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-1"><a class="toc_mobile_items-link" href="#Muc-luc"><span class="toc_mobile_items-number">2.</span> <span class="toc_mobile_items-text">Mục lục</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-1"><a class="toc_mobile_items-link" href="#Noi-dung"><span class="toc_mobile_items-number">3.</span> <span class="toc_mobile_items-text">Nội dung</span></a><ol class="toc_mobile_items-child"><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#1-1-Docker-la-gi"><span class="toc_mobile_items-number">3.0.1.</span> <span class="toc_mobile_items-text">1.1 Docker là gì?</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#1-2-Chuc-nang-vai-tro-cua-Docker"><span class="toc_mobile_items-number">3.0.2.</span> <span class="toc_mobile_items-text">1.2 Chức năng, vai trò của Docker?</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#1-3-Cac-khai-niem-can-biet-khi-su-dung-docker"><span class="toc_mobile_items-number">3.0.3.</span> <span class="toc_mobile_items-text">1.3 Các khái niệm cần biết khi sử dụng docker</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#1-3-1-Image"><span class="toc_mobile_items-number">3.0.4.</span> <span class="toc_mobile_items-text">1.3.1 Image</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#1-3-2-Registry"><span class="toc_mobile_items-number">3.0.5.</span> <span class="toc_mobile_items-text">1.3.2 Registry</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#1-3-3-Volume"><span class="toc_mobile_items-number">3.0.6.</span> <span class="toc_mobile_items-text">1.3.3 Volume</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#1-3-4-Container"><span class="toc_mobile_items-number">3.0.7.</span> <span class="toc_mobile_items-text">1.3.4 Container</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#1-3-5-Dockerfile"><span class="toc_mobile_items-number">3.0.8.</span> <span class="toc_mobile_items-text">1.3.5 Dockerfile</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#1-4-Cac-thanh-phan-kien-truc-trong-Docker"><span class="toc_mobile_items-number">3.0.9.</span> <span class="toc_mobile_items-text">1.4 Các thành phần, kiến trúc trong Docker</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#1-5-Cac-trang-thai-su-chuyen-giao-trang-thai-cua-container-trong-Docker"><span class="toc_mobile_items-number">3.0.10.</span> <span class="toc_mobile_items-text">1.5 Các trạng thái, sự chuyển giao trạng thái của container trong Docker</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#1-6-Network-trong-Docker"><span class="toc_mobile_items-number">3.0.11.</span> <span class="toc_mobile_items-text">1.6 Network trong Docker</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#1-7-Volume-trong-Docker"><span class="toc_mobile_items-number">3.0.12.</span> <span class="toc_mobile_items-text">1.7 Volume trong Docker</span></a></li></ol></li></ol></li></ol></div></div><div id="body-wrap"><div id="web_bg" data-type="color"></div><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true">     </i><div class="auto_open" id="sidebar"><div class="sidebar-toc"><div class="sidebar-toc__title">Mục lục</div><div class="sidebar-toc__progress"><span class="progress-notice">Bạn đã đọc</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar">     </div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-Gioi-thieu-ve-Docker"><span class="toc-number">1.</span> <span class="toc-text">1. Giới thiệu về Docker</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Muc-luc"><span class="toc-number">2.</span> <span class="toc-text">Mục lục</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Noi-dung"><span class="toc-number">3.</span> <span class="toc-text">Nội dung</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-Docker-la-gi"><span class="toc-number">3.0.1.</span> <span class="toc-text">1.1 Docker là gì?</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-Chuc-nang-vai-tro-cua-Docker"><span class="toc-number">3.0.2.</span> <span class="toc-text">1.2 Chức năng, vai trò của Docker?</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-3-Cac-khai-niem-can-biet-khi-su-dung-docker"><span class="toc-number">3.0.3.</span> <span class="toc-text">1.3 Các khái niệm cần biết khi sử dụng docker</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-3-1-Image"><span class="toc-number">3.0.4.</span> <span class="toc-text">1.3.1 Image</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-3-2-Registry"><span class="toc-number">3.0.5.</span> <span class="toc-text">1.3.2 Registry</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-3-3-Volume"><span class="toc-number">3.0.6.</span> <span class="toc-text">1.3.3 Volume</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-3-4-Container"><span class="toc-number">3.0.7.</span> <span class="toc-text">1.3.4 Container</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-3-5-Dockerfile"><span class="toc-number">3.0.8.</span> <span class="toc-text">1.3.5 Dockerfile</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-4-Cac-thanh-phan-kien-truc-trong-Docker"><span class="toc-number">3.0.9.</span> <span class="toc-text">1.4 Các thành phần, kiến trúc trong Docker</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-5-Cac-trang-thai-su-chuyen-giao-trang-thai-cua-container-trong-Docker"><span class="toc-number">3.0.10.</span> <span class="toc-text">1.5 Các trạng thái, sự chuyển giao trạng thái của container trong Docker</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-6-Network-trong-Docker"><span class="toc-number">3.0.11.</span> <span class="toc-text">1.6 Network trong Docker</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-7-Volume-trong-Docker"><span class="toc-number">3.0.12.</span> <span class="toc-text">1.7 Volume trong Docker</span></a></li></ol></li></ol></li></ol></div></div></div><div id="content-outer"><div id="top-container" style="background-image: url(/img/docker.png)"><div id="post-info"><div id="post-title"><div class="posttitle">2. Các ghi chép cần chú ý về docker</div></div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> Created 2019-12-05<span class="post-meta__separator">|</span><i class="fa fa-history" aria-hidden="true"></i> Updated 2019-12-05</time><div class="post-meta-wordcount"><i class="fa fa-eye post-meta__icon" aria-hidden="true">       </i><span>Post View: </span><span id="busuanzi_value_page_pv"></span></div></div></div></div><div class="layout layout_post" id="content-inner">   <article id="post"><div class="article-container" id="post-content"><h1 id="1-Gioi-thieu-ve-Docker"><a href="#1-Gioi-thieu-ve-Docker" class="headerlink" title="1. Giới thiệu về Docker"></a>1. Giới thiệu về Docker</h1><hr>
+<h1 id="Muc-luc"><a href="#Muc-luc" class="headerlink" title="Mục lục"></a>Mục lục</h1><ul>
+<li><a href="#whatis">1.1 Docker là gì?</a></li>
+<li><a href="#about">1.2 Chức năng, vai trò của Docker?</a></li>
+<li><a href="#concepts">1.3 Các khái niệm cần biết khi sử dụng docker</a><ul>
+<li><a href="#image">1.3.1 Image</a></li>
+<li><a href="#registry">1.3.2 Registry</a></li>
+<li><a href="#volume">1.3.3 Volume</a></li>
+<li><a href="#container">1.3.4 Container</a></li>
+<li><a href="#docker-file">1.3.5 Dockerfile</a></li>
+</ul>
+</li>
+<li><a href="#compose">1.4 Các thành phần, kiến trúc trong Docker</a></li>
+<li><a href="#workflow">1.5 Các trạng thái, thứ tự chuyển giao trạng thái của container trong Docker</a></li>
+<li><a href="#network">1.6 Network trong Docker</a></li>
+<li><a href="#volume">1.7 Volume trong Docker</a></li>
+<li><a href="#content-others">Các nội dung khác</a></li>
+</ul>
+<hr>
+<h1 id="Noi-dung"><a href="#Noi-dung" class="headerlink" title="Nội dung"></a><a name="content">Nội dung</a></h1><ul>
+<li><h3 id="1-1-Docker-la-gi"><a href="#1-1-Docker-la-gi" class="headerlink" title="1.1 Docker là gì?"></a><a name="whatis">1.1 Docker là gì?</a></h3><ul>
+<li><p>Docker là một ứng dụng mã nguồn mở cho phép độc lập triển khai giữa các ứng dụng và cơ sở hạ tầng đối với các nhà phát triển và mở ra tiềm năng tạo nên một mô hình cho sự hợp tác tốt và đổi mới hơn.</p>
+</li>
+<li><p>Docker giải quyết vấn đề khi mà các doanh nghiệp ngày nay đang chịu áp lực phải chuyển đổi kỹ thuật số nhưng bị hạn chế bởi các ứng dụng và cơ sở hạ tầng hiện tại đồng thời hợp lý hóa danh mục cloud, trung tâm dữ liệu và kiến trúc ứng dụng ngày càng đa dạng.</p>
+</li>
+</ul>
+</li>
+<li><h3 id="1-2-Chuc-nang-vai-tro-cua-Docker"><a href="#1-2-Chuc-nang-vai-tro-cua-Docker" class="headerlink" title="1.2 Chức năng, vai trò của Docker?"></a><a name="about">1.2 Chức năng, vai trò của Docker?</a></h3><ul>
+<li><p>Cho phép phát triển, di chuyển và chạy các ứng dụng dựa vào công nghệ ảo hóa container trong Linux.</p>
+</li>
+<li><p>Tự động triển khai các ứng dụng bên trong các container bằng cách cung cấp thêm một lớp trừu tượng và tự động hóa việc ảo hóa “mức hệ điều hành”.</p>
+</li>
+<li><p>Docker có thể sử dụng được trên cả 3 hệ điều hành phổ biến: Windows, Linux và Mac OS.</p>
+</li>
+<li><p>Lợi ích của docker bao gồm:</p>
+<ul>
+<li>Nhanh trong việc triển khai, di chuyển, khởi động container</li>
+<li>Bảo mật</li>
+<li>Lightweight (tiết kiệm disk &amp; CPU)</li>
+<li>Mã nguồn mở</li>
+<li>Hỗ trợ APIs để giao tiếp với container</li>
+<li>Phù hợp trong môi trường làm việc đòi hòi phải liên tục tích hợp và triển khai các dịch vụ, phát triển cục bộ, các ứng dụng multi-tier.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><h3 id="1-3-Cac-khai-niem-can-biet-khi-su-dung-docker"><a href="#1-3-Cac-khai-niem-can-biet-khi-su-dung-docker" class="headerlink" title="1.3 Các khái niệm cần biết khi sử dụng docker"></a><a name="concepts">1.3 Các khái niệm cần biết khi sử dụng docker</a></h3><ul>
+<li><h3 id="1-3-1-Image"><a href="#1-3-1-Image" class="headerlink" title="1.3.1 Image"></a><a name="image">1.3.1 Image</a></h3><ul>
+<li><p>Image trong Docker hay còn gọi là Mirror. Là một template có sẵn (hoặc có thể tự tạo) với các chỉ dẫn dùng để tạo ra các container. </p>
+</li>
+<li><p>Được xây dựng từ một loạt các layers. Mỗi layer là một kết quả đại diện cho một lệnh trong Dockerfile.</p>
+</li>
+<li><p>Lưu trữ dưới dạng read-only template.</p>
+</li>
+</ul>
+</li>
+<li><h3 id="1-3-2-Registry"><a href="#1-3-2-Registry" class="headerlink" title="1.3.2 Registry"></a><a name="registry">1.3.2 Registry</a></h3><ul>
+<li><p>Docker Registry là nơi lưu trữ các image với hai chế độ là private và public.</p>
+</li>
+<li><p>Là nơi cho phép chia sẻ các image template để sử dụng trong quá trình làm việc với Docker.</p>
+</li>
+</ul>
+</li>
+<li><h3 id="1-3-3-Volume"><a href="#1-3-3-Volume" class="headerlink" title="1.3.3 Volume"></a><a name="volume">1.3.3 Volume</a></h3><ul>
+<li><p>Volume trong Docker là nơi dùng để chia sẻ dữ liệu cho các container.</p>
+</li>
+<li><p>Có thể thực hiện sử dụng Volume đối với 2 trường hợp:</p>
+<ul>
+<li>Chia sẻ giữa container với container.</li>
+<li>Chia sẻ giữa container và host.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><h3 id="1-3-4-Container"><a href="#1-3-4-Container" class="headerlink" title="1.3.4 Container"></a><a name="container">1.3.4 Container</a></h3><ul>
+<li><p>Docker Container là một thể hiện của Docker Image với những thao tác cơ bản để sử dụng qua CLI như start, stop, restart hay delete, …</p>
+</li>
+<li><p>Container Image là một gói phần mềm thực thi lightweight, độc lập và có thể thực thi được bao gồm mọi thứ cần thiết để chạy được nó: code, runtime, system tools, system libraries, settings. Các ứng dụng có sẵn cho cả Linux và Windows, các container sẽ luôn chạy ổn định bất kể môi trường.</p>
+<blockquote>
+<p><img alt="docker-container-images" data-src="https://github.com/hocchudong/ghichep-docker/raw/master/images/docker-container-images.png" class="lazyload"></p>
+</blockquote>
+</li>
+<li><p>Containers and virtual machines có sự cách ly và phân bổ tài nguyên tương tự, nhưng có chức năng khác vì các container ảo hóa hệ điều hành thay vì phần cứng. Các container có tính portable và hiệu quả hơn.</p>
+<blockquote>
+<p><img alt="docker-container-vms" data-src="https://github.com/hocchudong/ghichep-docker/raw/master/images/docker-container-vms.png" class="lazyload"></p>
+</blockquote>
+<ul>
+<li><p>Container là một sự trừu tượng hóa ở lớp ứng dụng và code phụ thuộc vào nhau. Nhiều container có thể chạy trên cùng một máy và chia sẻ kernel của hệ điều hành với các container khác, mỗi máy đều chạy như các quá trình bị cô lập trong không gian người dùng. Các container chiếm ít không gian hơn các máy ảo (container image thường có vài trăm thậm chí là vài MB), và start gần như ngay lập tức.</p>
+</li>
+<li><p>Máy ảo (VM) là một sự trừu tượng của phần cứng vật lý chuyển tiếp từ một máy chủ sang nhiều máy chủ. Hypervisor cho phép nhiều máy ảo chạy trên một máy duy nhất. Mỗi máy ảo bao gồm một bản sao đầy đủ của một hệ điều hành, một hoặc nhiều ứng dụng, các chương trình và thư viện cần thiết - chiếm hàng chục GB. Máy ảo cũng có thể khởi động chậm.</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><h3 id="1-3-5-Dockerfile"><a href="#1-3-5-Dockerfile" class="headerlink" title="1.3.5 Dockerfile"></a><a name="docker-file">1.3.5 Dockerfile</a></h3><ul>
+<li><p>Docker Image có thể được tạo ra một cách tự động bằng việc đọc các chỉ dẫn trong Dockerfile.</p>
+</li>
+<li><p>Dockerfile là một dữ liệu văn bản bao gồm các câu lệnh mà người sử dụng có thể gọi qua các dòng lệnh để tạo ra một image.</p>
+</li>
+<li><p>Bằng việc sử dụng <code>docker build</code> người dùng có thể tạo một tự động xây dựng thực hiện một số lệnh dòng lệnh liên tiếp.</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><h3 id="1-4-Cac-thanh-phan-kien-truc-trong-Docker"><a href="#1-4-Cac-thanh-phan-kien-truc-trong-Docker" class="headerlink" title="1.4 Các thành phần, kiến trúc trong Docker"></a><a name="compose">1.4 Các thành phần, kiến trúc trong Docker</a></h3><blockquote>
+<p><img alt="engine-components-flow.png" data-src="https://github.com/hocchudong/ghichep-docker/raw/master/images/docker-engine-components-flow.png" class="lazyload"></p>
+</blockquote>
+<ul>
+<li><p>Hình ảnh bên trên là mô tả về <code>Docker Engine</code>. Theo đó, <code>Docker Engine</code> là một ứng dụng client-server với các thành phần chính:</p>
+<ul>
+<li>Một máy chủ đảm nhiệm thực hiện quá trình daemon (chạy câu lệnh <code>dockerd</code>).</li>
+<li>REST API xác định các giao diện mà các chương trình có thể sử dụng để nói chuyện với daemon và hướng dẫn nó phải làm gì.</li>
+<li>Một CLI (chạy câu lệnh <code>docker</code>).</li>
+</ul>
+</li>
+<li><p>CLI sẽ sử dụng Docker REST API để kiểm soát hoặc tương tác với Docker daemon thông qua kịch bản hoặc lệnh CLI trực tiếp.</p>
+<blockquote>
+<p><img alt="architecture.png" data-src="https://github.com/hocchudong/ghichep-docker/raw/master/images/docker-architecture.png" class="lazyload"></p>
+</blockquote>
+</li>
+<li><p>Docker sử dụng kiến trúc client-server. Docker client sẽ giao tiếp với Docker daemon các công việc building, running và distributing các Docker Container.</p>
+</li>
+<li><p>Docker client và Docker daemon có thể chạy cùng trên một hệ thống hoặc ta có thể kết nối một Docker client tới một remote Docker daemon. Docker client và Docker daemon liên lạc với nhau bằng việc sử dụng REST API thông qua UNIX sockets hoặc network interfaces.</p>
+</li>
+<li><p>Docker daemon (dockerd ) sẽ lắng nghe các request từ Docker API và quản lý Docker objects bao gồm images, containers, networks và volumes. Một daemon cũng có thể liên lạc với các daemons khác để quản lý Docker services.</p>
+</li>
+<li><p>Docker client (docker ) là con đường chính để những người sử dụng Docker tương tác và giao tiếp với Docker. Khi sử dụng mộ câu lệnh chẳng hạn như <code>docker run</code> thì client sẽ gửi câu lệnh tới dockerd để thực hiện câu lệnh. Các câu lệnh từ Docker client sử dụng Docker API và có thể giao tiếp với nhiều Docker daemon.</p>
+</li>
+</ul>
+</li>
+<li><h3 id="1-5-Cac-trang-thai-su-chuyen-giao-trang-thai-cua-container-trong-Docker"><a href="#1-5-Cac-trang-thai-su-chuyen-giao-trang-thai-cua-container-trong-Docker" class="headerlink" title="1.5 Các trạng thái, sự chuyển giao trạng thái của container trong Docker"></a><a name="workflow">1.5 Các trạng thái, sự chuyển giao trạng thái của container trong Docker</a></h3><p>  Hình ảnh dưới đây mô tả cho một vòng đời của container trong Docker cùng với các trạng thái hoạt động:</p>
+<blockquote>
+<p><img alt="docker-state" data-src="https://github.com/hocchudong/ghichep-docker/raw/master/images/docker-state.png" class="lazyload"></p>
+</blockquote>
+</li>
+<li><h3 id="1-6-Network-trong-Docker"><a href="#1-6-Network-trong-Docker" class="headerlink" title="1.6 Network trong Docker"></a><a name="network">1.6 Network trong Docker</a></h3><p>  Dưới đây là hình ảnh mô tả kiến trúc Network của Container hay còn gọi là Container Networking Model (CNM).</p>
+<blockquote>
+<p><img alt="docker-network-models" data-src="https://github.com/hocchudong/ghichep-docker/raw/master/images/docker-network-models.png" class="lazyload"></p>
+</blockquote>
+<p>  Đây là cấu trúc mức độ cao trong CNM. Theo đó, ta có:</p>
+<ul>
+<li><p>Sandbox - Chứa các cấu hình của ngăn xếp mạng container. Bao gồm quản lý network interface, route table và các thiết lập DNS. Một Sandbox có thể được coi là một namespace network và có thể chứa nhiều endpoit từ nhiều mạng.</p>
+</li>
+<li><p>Endpoint - Là điểm kết nối một Sandbox tới một mạng.</p>
+</li>
+<li><p>Network - CNM không chỉ định một mạng tuân theo mô hình OSI. Việc triển khai mạng có thể là VLAN, Bridge, … Các endpoint không kết nối với mạng thì không có kết nối trên mạng.</p>
+</li>
+</ul>
+<ul>
+<li><p>CNM cung cấp 2 interface có thể được sử dụng cho việc liên lạc, điều khiển, … container trong mạng:</p>
+<ul>
+<li><p><code>Network Drivers</code> - Cung cấp, thực hiện thực tế việc tạo ra một mạng hoạt động. Được sử dụng với các drivers khác và thay đổi một cách dễ dàng đối với các trường hợp cụ thể. Nhiều network driver có thể được sử dụng trong Docker nhưng mỗi một network chỉ là một khởi tạo từ một network driver duy nhất. Theo đó mà ta có 2 loại chính của CNM network drivers như sau:</p>
+<ul>
+<li><p><code>Native Network Drivers</code> - Là một phần của Docker Engine và được cung cấp bới Docker. Có nhiều drivers để dễ dàng lựa chọn cho khả năng của mạng như overlay networks hay local bridges.</p>
+</li>
+<li><p><code>Remote Network Drivers</code> - Là các network drivers được tạo ra bởi cộng đồng và các nhà cung cấp. Được sử dụng để tích hợp vào các phần mềm hoặc phần cứng đang hoạt động.</p>
+</li>
+</ul>
+</li>
+<li><p><code>IPAM Drivers</code>: Drivers quản lý các địa chỉ IP cung cấp mặc định cho các mạng con hoặc địa chỉ IP cho các mạng và endpoint nếu chúng không được chỉ định. Địa chỉ IP cũng có thể gán thủ công qua mạng, container, …</p>
+</li>
+</ul>
+</li>
+<li><p>Giao tiếp giữa docker engine - libnetwork - driver</p>
+<blockquote>
+<p><img alt="docker-ipam-network" data-src="https://github.com/hocchudong/ghichep-docker/raw/master/images/docker-ipam-network.png" class="lazyload"></p>
+</blockquote>
+</li>
+<li><p><code>Docker Native Network Drivers</code> - là một phần của Docker Engine và không yêu cầu cần phải có nhiều modules. Được gọi và sử dụng thông qua các câu lệnh <code>docker network</code>. Dưới đây là native network hiện có:</p>
+<table>
+<thead>
+<tr>
+<th>Driver</th>
+<th>Mô tả</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Host</td>
+<td>Với host driver, một container sẽ sử dụng ngăn xếp mạng của host. Không có sự phân biệt giữa namespace, tất cả các interface trên host có thể được sử dụng trực tiếp bởi container</td>
+</tr>
+<tr>
+<td>Bridge</td>
+<td>Bridge driver tạo ra Linux bridges trên host và được quản lý bởi Docker. Mặc định, containers trên một bridge có thể liên lạc với nhau. Việc truy cập từ bên ngoài tới các container có thể được cấu hình thông qua bridge driver.</td>
+</tr>
+<tr>
+<td>Overlay</td>
+<td>Overlay driver tạo ra một overlay network hỗ trợ cho các mạng multi-host. Được sử dụng kết hợp với Linux bridges và VXLAN để che đi liên lạc giữa các container qua cơ sở mạng hạ tầng vật lý.</td>
+</tr>
+<tr>
+<td>MACVLAN</td>
+<td>MACVLAN driver sử dụng chế độ MACVLAN bridge để thiết lập kết nối giữa container interface và host interface (hoặc sub-interface). Nó có thể được sử dụng để cung cấp địa chỉ IP cho các container và định tuyến trên mạng vật lý. Ngoài ra VLANs có thể được trunked đến MACVLAN driver</td>
+</tr>
+<tr>
+<td>None</td>
+<td>None driver cho một ngăn xếp mạng riêng và namespace nhưng không cấu hình interfaces bên trong container. Nếu không có cấu hình bổ sung, container hoàn toàn bị cô lập khỏi mạng của host</td>
+</tr>
+</tbody></table>
+</li>
+<li><p>Đối với native driver network trong container. Ta có:</p>
+<ul>
+<li><p>Chiều outbound khi các container sử dụng trong container </p>
+<blockquote>
+<p><img alt="docker-native-network-out.png" data-src="https://github.com/hocchudong/ghichep-docker/raw/master/images/docker-native-network-out.png" class="lazyload"></p>
+</blockquote>
+</li>
+<li><p>Chiều inbound khi các container sử dụng trong container </p>
+<blockquote>
+<p><img alt="docker-native-network-in.png" data-src="https://github.com/hocchudong/ghichep-docker/raw/master/images/docker-native-network-in.png" class="lazyload"></p>
+</blockquote>
+</li>
+<li><p>Container kết nối với network thông quan docker0 interface:</p>
+<blockquote>
+<p><img alt="docker-native-network-inhost" data-src="https://github.com/hocchudong/ghichep-docker/raw/master/images/docker-native-network-inhost.png" class="lazyload"></p>
+</blockquote>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><h3 id="1-7-Volume-trong-Docker"><a href="#1-7-Volume-trong-Docker" class="headerlink" title="1.7 Volume trong Docker"></a><a name="volume">1.7 Volume trong Docker</a></h3><ul>
+<li><p>Volume là một thư mục đặc biệt được chỉ định trong một hoặc nhiều container.</p>
+</li>
+<li><p>Volumes được thiết kế để duy trì dữ liệu, độc lập với vòng đời của container.</p>
+</li>
+<li><p>Do đó, Docker sẽ không bao giờ tự động xóa volumes khi ta xóa bỏ containers. Còn được biết đến là <code>data volume</code>.</p>
+</li>
+</ul>
+<ul>
+<li><p>Có 3 kiểu volume đó là: host, anonymous, named:</p>
+<ul>
+<li><p><code>host volume</code> - tồn tại trên filesystem của Docker host và có thể được truy cập từ bên trong container.</p>
+</li>
+<li><p><code>named volume</code>- là volume được Docker quản lý và được đặt tên.</p>
+</li>
+<li><p><code>anonymous volume</code>- tương tự như <code>named volume</code>. Tuy nhiên rất khó để có thể tham vấn tới cùng một volume theo thời gian khi volume là một đối tượng vô danh. Lưu trữ các tập tin mà Docker xử lý.</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<hr>
+</div></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="mailto:undefined" target="_blank" rel="noopener">Eopi Noriko</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="/https:/eopi.loliteam.net/2019/12/05/docker2/">https://eopi.loliteam.net/2019/12/05/docker2/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Docker/">Docker    </a><a class="post-meta__tags" href="/tags/Virtual-Machine/">Virtual Machine    </a></div><div class="post_share"><div class="social-share" data-image="/img/docker.png" data-sites="facebook,twitter"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/css/share.min.css"><script src="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/js/social-share.min.js"></script></div></div><nav class="pagination_post" id="pagination"><div class="prev-post pull_left"><a href="/2019/12/05/docker3/"><img class="prev_cover lazyload" data-src="/img/docker.png" onerror="onerror=null;src='/img/404.jpg'"><div class="label">Bài đăng trước</div><div class="prev_info"><span>3. Docker image</span></div></a></div><div class="next-post pull_right"><a href="/2019/12/05/docker1/"><img class="next_cover lazyload" data-src="/img/docker.png" onerror="onerror=null;src='/img/404.jpg'"><div class="label">Bài tiếp theo</div><div class="next_info"><span>1. Cài đặt docker engine cơ bản (Cài đặt môi trường lab)</span></div></a></div></nav><div class="relatedPosts"><div class="relatedPosts_headline"><i class="fa fa-fw fa-thumbs-up" aria-hidden="true"></i><span> Recommend</span></div><div class="relatedPosts_list"><div class="relatedPosts_item"><a href="/2019/12/05/docker1/" title="1. Cài đặt docker engine cơ bản (Cài đặt môi trường lab)"><img class="relatedPosts_cover lazyload"data-src="/img/docker.png"><div class="relatedPosts_title">1. Cài đặt docker engine cơ bản (Cài đặt môi trường lab)</div></a></div><div class="relatedPosts_item"><a href="/2019/12/05/docker3/" title="3. Docker image"><img class="relatedPosts_cover lazyload"data-src="/img/docker.png"><div class="relatedPosts_title">3. Docker image</div></a></div><div class="relatedPosts_item"><a href="/2019/12/05/docker4/" title="4. Viết dockerfile để build image"><img class="relatedPosts_cover lazyload"data-src="/img/docker.png"><div class="relatedPosts_title">4. Viết dockerfile để build image</div></a></div></div><div class="clear_both"></div></div></div></div><footer id="footer" style="background-image: url(/img/docker.png)"><div id="footer-wrap"><div class="copyright">&copy;2019 By Eopi Noriko</div><div class="framework-info"><span>Driven </span><a href="http://hexo.io" target="_blank" rel="noopener"><span>Hexo</span></a><span class="footer-separator">|</span><span>Theme </span><a href="https://github.com/jerryc127/hexo-theme-butterfly" target="_blank" rel="noopener"><span>Butterfly</span></a></div></div></footer></div><section class="rightside" id="rightside"><div id="rightside-config-hide"><i class="fa fa-book" id="readmode" title="Read Mode"></i><i class="fa fa-plus" id="font_plus" title="Increase font size"></i><i class="fa fa-minus" id="font_minus" title="Decrease font size"></i><i class="darkmode fa fa-moon-o" id="darkmode" title="Dark Mode"></i></div><div id="rightside-config-show"><div id="rightside_config" title="Setting"><i class="fa fa-cog" aria-hidden="true"></i></div><i class="fa fa-list-ul close" id="mobile-toc-button" title="Table of Contents" aria-hidden="true"></i><i class="fa fa-arrow-up" id="go-up" title="Back to top" aria-hidden="true"></i></div></section><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/medium-zoom/dist/medium-zoom.min.js"></script><script async src="/js/search/local-search.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.15/dist/snackbar.min.js"></script><script id="ribbon" src="/js/third-party/canvas-ribbon.js" size="150" alpha="0.7" zIndex="-1" mobile="true" data-click="true"></script><script id="ribbon_piao" mobile="true" src="/js/third-party/piao.js"></script><script id="canvas_nest" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="/js/third-party/canvas-nest.js"></script><script src="/js/third-party/activate-power-mode.js"></script><script>POWERMODE.colorful = true; // make power mode colorful
+POWERMODE.shake = true; // turn off shake
+document.body.addEventListener('input', POWERMODE);
+</script><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@latest/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/lazysizes@latest/lazysizes.min.js" async=""></script><script src="/js/third-party/click_heart.js"></script><script src="/js/third-party/ClickShowText.js"></script><div class="search-dialog" id="local-search"><div class="search-dialog__title" id="local-search-title">Tìm Kiếm</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="Tìm kiếm Bài viết"></div></div></div><hr><div id="local-search-results"><div id="local-hits"></div><div id="local-stats"><div class="local-search-stats__hr" id="hr"><span>Powered by</span> <a href="https://github.com/wzpan/hexo-generator-search" target="_blank" rel="noopener" style="color:#49B1F5;">hexo-generator-search</a></div></div></div><span class="search-close-button"><i class="fa fa-times"></i></span></div><div class="search-mask"></div></body></html>

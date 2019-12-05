@@ -1,0 +1,136 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><title>8. Thao tác với container | Eopi Blog</title><meta name="description" content="8. Thao tác với container"><meta name="keywords" content="Docker,Virtual Machine"><meta name="author" content="Eopi Noriko"><meta name="copyright" content="Eopi Noriko"><meta name="format-detection" content="telephone=no"><link rel="shortcut icon" href="/img/favicon.ico"><link rel="preconnect" href="//cdn.jsdelivr.net"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="8. Thao tác với container"><meta name="twitter:description" content="8. Thao tác với container"><meta name="twitter:image" content="https://eopi.loliteam.net/img/docker.png"><meta property="og:type" content="article"><meta property="og:title" content="8. Thao tác với container"><meta property="og:url" content="https://eopi.loliteam.net/2019/12/05/docker8/"><meta property="og:site_name" content="Eopi Blog"><meta property="og:description" content="8. Thao tác với container"><meta property="og:image" content="https://eopi.loliteam.net/img/docker.png"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><script src="https://cdn.jsdelivr.net/npm/js-cookie/dist/js.cookie.min.js"></script><script>const autoChangeMode = 'false'
+var t = Cookies.get("theme");
+if (autoChangeMode == '1'){
+const isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches
+const isLightMode = window.matchMedia("(prefers-color-scheme: light)").matches
+const isNotSpecified = window.matchMedia("(prefers-color-scheme: no-preference)").matches
+const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+if (t === undefined){
+  if (isLightMode) activateLightMode()
+  else if (isDarkMode) activateDarkMode()
+  else if (isNotSpecified || hasNoSupport){
+    console.log('You specified no preference for a color scheme or your browser does not support it. I Schedule dark mode during night time.')
+    now = new Date();
+    hour = now.getHours();
+    isNight = hour < 6 || hour >= 18
+    isNight ? activateDarkMode() : activateLightMode()
+}
+} else if (t == 'light') activateLightMode()
+else activateDarkMode()
+
+
+} else if (autoChangeMode == '2'){
+  now = new Date();
+  hour = now.getHours();
+  isNight = hour < 6 || hour >= 18
+  if(t === undefined) isNight? activateDarkMode() : activateLightMode()
+  else if (t === 'light') activateLightMode()
+  else activateDarkMode() 
+} else {
+  if ( t == 'dark' ) activateDarkMode()
+  else if ( t == 'light') activateLightMode()
+}
+
+function activateDarkMode(){
+  document.documentElement.setAttribute('data-theme', 'dark')
+  if (document.querySelector('meta[name="theme-color"]') !== null){
+    document.querySelector('meta[name="theme-color"]').setAttribute('content','#000')
+  }
+}
+function activateLightMode(){
+  document.documentElement.setAttribute('data-theme', 'light')
+  if (document.querySelector('meta[name="theme-color"]') !== null){
+  document.querySelector('meta[name="theme-color"]').setAttribute('content','#fff')
+  }
+}</script><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.15/dist/snackbar.min.css"><link rel="canonical" href="https://eopi.loliteam.net/2019/12/05/docker8/"><link rel="prev" title="Hướng dẫn dùng Github cho SysAdmin" href="/https:/eopi.loliteam.net/2019/12/05/github/"><link rel="next" title="7. Thao tác với images" href="/https:/eopi.loliteam.net/2019/12/05/docker7/"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Titillium+Web"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"Chúng tôi không tìm thấy bất kỳ kết quả nào cho tìm kiếm: ${query}"}},
+  translate: undefined,
+  highlight_copy: 'true',
+  highlight_lang: 'true',
+  highlight_shrink: 'false',
+  copy: {
+    success: 'Sao chép thành công',
+    error: 'Sao chép lỗi',
+    noSupport: 'Trình duyệt không hỗ trợ'
+  },
+  bookmark: {
+    title: 'Snackbar.bookmark.title',
+    message_prev: 'Nhấn',
+    message_next: 'để đánh dấu trang này'
+  },
+  runtime_unit: 'days',
+  copyright: undefined,
+  copy_copyright_js: false,
+  ClickShowText: {"text":"Eopi,LoLi,Shiina","fontSize":"15px"},
+  medium_zoom: 'true',
+  Snackbar: {"bookmark":{"title":"Snackbar.bookmark.title","message_prev":"Nhấn","message_next":"để đánh dấu trang này"},"chs_to_cht":"Traditional Chinese Activated Manually","cht_to_chs":"Simplified Chinese Activated Manually","day_to_night":"Light Mode Activated Manually","night_to_day":"Dark Mode Activated Manually","bgLight":"#49b1f5","bgDark":"#2d3035","position":"bottom-left"}
+  
+}</script></head><body><div id="header"> <div id="page-header"><span class="pull_left" id="blog_name"><a class="blog_title" id="site-name" href="/">Eopi Blog</a></span><i class="fa fa-bars fa-fw toggle-menu pull_right close" aria-hidden="true"></i><span class="pull_right menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> Archives</span></a></div></div></span><span class="pull_right" id="search_button"><a class="site-page social-icon search"><i class="fa fa-search fa-fw"></i><span> Search</span></a></span></div></div><div id="mobile-sidebar"><div id="menu_mask"></div><div id="mobile-sidebar-menus"><div class="mobile_author_icon"><img class="lazyload avatar_img" src="/img/avatar.jpg" onerror="onerror=null;src='/img/friend_404.gif'"></div><div class="mobile_post_data"><div class="mobile_data_item is_center"><div class="mobile_data_link"><a href="/archives/"><div class="headline">Articles</div><div class="length_num">14</div></a></div></div><div class="mobile_data_item is_center">      <div class="mobile_data_link"><a href="/tags/"><div class="headline">Tags</div><div class="length_num">9</div></a></div></div></div><hr><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> Archives</span></a></div></div></div><div id="mobile-sidebar-toc"><div class="toc_mobile_headline">Mục lục</div><ol class="toc_mobile_items"><li class="toc_mobile_items-item toc_mobile_items-level-1"><a class="toc_mobile_items-link" href="#Thuc-hanh-container"><span class="toc_mobile_items-number">1.</span> <span class="toc_mobile_items-text">Thực hành container</span></a></li></ol></div></div><div id="body-wrap"><div id="web_bg" data-type="color"></div><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true">     </i><div class="auto_open" id="sidebar"><div class="sidebar-toc"><div class="sidebar-toc__title">Mục lục</div><div class="sidebar-toc__progress"><span class="progress-notice">Bạn đã đọc</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar">     </div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Thuc-hanh-container"><span class="toc-number">1.</span> <span class="toc-text">Thực hành container</span></a></li></ol></div></div></div><div id="content-outer"><div id="top-container" style="background-image: url(/img/docker.png)"><div id="post-info"><div id="post-title"><div class="posttitle">8. Thao tác với container</div></div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> Created 2019-12-05<span class="post-meta__separator">|</span><i class="fa fa-history" aria-hidden="true"></i> Updated 2019-12-05</time><div class="post-meta-wordcount"><i class="fa fa-eye post-meta__icon" aria-hidden="true">       </i><span>Post View: </span><span id="busuanzi_value_page_pv"></span></div></div></div></div><div class="layout layout_post" id="content-inner">   <article id="post"><div class="article-container" id="post-content"><h1 id="Thuc-hanh-container"><a href="#Thuc-hanh-container" class="headerlink" title="Thực hành container"></a>Thực hành container</h1><p>Liệt kê số lượng container đang chạy (run) trên host:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker ps</span></pre></td></tr></table></figure>
+
+<p>Thêm tham số <code>-a</code> để liệt kê tất cả các container đang có trên host (bao gồm cả đang chạy và dừng):</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker ps -a</span></pre></td></tr></table></figure>
+
+<p>Tạo một container từ image, nếu image không có sẵn trên local host thì docker sẽ tìm trên <code>docker hub</code> image phiên bản <code>latest</code> để tải về và chạy:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker run ubuntu</span></pre></td></tr></table></figure>
+
+<ul>
+<li>Thay <code>ubuntu</code> bằng image mà bạn muốn tạo ra container.</li>
+</ul>
+<p>Ví dụ:</p>
+<p><img alt="docker_run" data-src="https://tutorials.ubuntu.com/bundled/src/codelabs/tutorial-windows-ubuntu-hyperv-containers/img/d924bbd7a96719c.png" class="lazyload"></p>
+<p>Đặt tên cho một container khi khởi tạo, thêm tham số <code>--name</code></p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker run --name ubuntu_test ubuntu</span></pre></td></tr></table></figure>
+
+<p>Tạo một docker và sử dụng terminal của docker</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker run -it --name ubuntu_test1 ubuntu /bin/bash</span></pre></td></tr></table></figure>
+
+<p><strong>Note</strong>: Chỉ sử dụng tham số <code>-it</code> thì khi thoát terminal của docker bằng <code>exit</code>, docker sẽ bị dừng.</p>
+<p>Chỉ định chạy một docker dưới nền như một deamon. </p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker run -d ubuntu /bin/bash</span></pre></td></tr></table></figure>
+
+<p>Vào terminal của một container đang chạy</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker <span class="built_in">exec</span> -it ubuntu_test1 /bin/bash</span></pre></td></tr></table></figure>
+
+<ul>
+<li>Thay <code>ubuntu_test1</code> bằng tên của container</li>
+<li>Chỉ vào terminal của một container khi kiểm tra trạng thái của container bằng lệnh <code>docker ps -a</code> mà container đang ở trạng thái <code>Up</code></li>
+</ul>
+<p>Thoát ra khỏi một container khi đang sử dụng terminal bằng cách:</p>
+<ul>
+<li>Gõ <code>exit</code></li>
+<li>Nhấn tổ hợp phím <code>Ctl+P</code> và <code>Ctl+Q</code></li>
+</ul>
+<p>Xem thông tin chi tiết về một container bằng lệnh:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker inspect ubuntu_test1</span></pre></td></tr></table></figure>
+
+<ul>
+<li>thay <code>ubuntu_test1</code> bằng tên hoặc ID của container bạn muốn xem.</li>
+</ul>
+<p>Xóa một container ở trạng thái <code>Exited</code></p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker rm ubuntu_test</span></pre></td></tr></table></figure>
+
+<p>Xóa một container ở trạng thái <code>Up</code> thì thêm tham số <code>-f</code></p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker rm -f ubuntu_test1</span></pre></td></tr></table></figure>
+
+<ul>
+<li>Lệnh xóa tất cả các container trên host: <code>docker rm -f $(docker ps -aq)</code></li>
+</ul>
+<p>Commit một container thành image:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker commit ubuntu_test1 tannt/ubuntu:latest</span></pre></td></tr></table></figure>
+
+<ul>
+<li><code>ubuntu_test1</code> là tên của container có trên host</li>
+<li><code>tannt/ubuntu:latest</code> là chỉ định tên của image (kèm repository) là <code>tannt/ubuntu</code> có phiên bản <code>latest</code> </li>
+</ul>
+<p>Khởi động/dừng một container</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker [restart|start|stop] ubuntu_test1</span></pre></td></tr></table></figure>
+
+<p>Cách tra cứu cú pháp các command:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">docker [<span class="built_in">command</span>] --<span class="built_in">help</span></span></pre></td></tr></table></figure></div></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="mailto:undefined" target="_blank" rel="noopener">Eopi Noriko</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="/https:/eopi.loliteam.net/2019/12/05/docker8/">https://eopi.loliteam.net/2019/12/05/docker8/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Docker/">Docker    </a><a class="post-meta__tags" href="/tags/Virtual-Machine/">Virtual Machine    </a></div><div class="post_share"><div class="social-share" data-image="/img/docker.png" data-sites="facebook,twitter"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/css/share.min.css"><script src="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/js/social-share.min.js"></script></div></div><nav class="pagination_post" id="pagination"><div class="prev-post pull_left"><a href="/2019/12/05/github/"><img class="prev_cover lazyload" data-src="/img/github.jpg" onerror="onerror=null;src='/img/404.jpg'"><div class="label">Bài đăng trước</div><div class="prev_info"><span>Hướng dẫn dùng Github cho SysAdmin</span></div></a></div><div class="next-post pull_right"><a href="/2019/12/05/docker7/"><img class="next_cover lazyload" data-src="/img/docker.png" onerror="onerror=null;src='/img/404.jpg'"><div class="label">Bài tiếp theo</div><div class="next_info"><span>7. Thao tác với images</span></div></a></div></nav><div class="relatedPosts"><div class="relatedPosts_headline"><i class="fa fa-fw fa-thumbs-up" aria-hidden="true"></i><span> Recommend</span></div><div class="relatedPosts_list"><div class="relatedPosts_item"><a href="/2019/12/05/docker1/" title="1. Cài đặt docker engine cơ bản (Cài đặt môi trường lab)"><img class="relatedPosts_cover lazyload"data-src="/img/docker.png"><div class="relatedPosts_title">1. Cài đặt docker engine cơ bản (Cài đặt môi trường lab)</div></a></div><div class="relatedPosts_item"><a href="/2019/12/05/docker2/" title="2. Các ghi chép cần chú ý về docker"><img class="relatedPosts_cover lazyload"data-src="/img/docker.png"><div class="relatedPosts_title">2. Các ghi chép cần chú ý về docker</div></a></div><div class="relatedPosts_item"><a href="/2019/12/05/docker3/" title="3. Docker image"><img class="relatedPosts_cover lazyload"data-src="/img/docker.png"><div class="relatedPosts_title">3. Docker image</div></a></div></div><div class="clear_both"></div></div></div></div><footer id="footer" style="background-image: url(/img/docker.png)"><div id="footer-wrap"><div class="copyright">&copy;2019 By Eopi Noriko</div><div class="framework-info"><span>Driven </span><a href="http://hexo.io" target="_blank" rel="noopener"><span>Hexo</span></a><span class="footer-separator">|</span><span>Theme </span><a href="https://github.com/jerryc127/hexo-theme-butterfly" target="_blank" rel="noopener"><span>Butterfly</span></a></div></div></footer></div><section class="rightside" id="rightside"><div id="rightside-config-hide"><i class="fa fa-book" id="readmode" title="Read Mode"></i><i class="fa fa-plus" id="font_plus" title="Increase font size"></i><i class="fa fa-minus" id="font_minus" title="Decrease font size"></i><i class="darkmode fa fa-moon-o" id="darkmode" title="Dark Mode"></i></div><div id="rightside-config-show"><div id="rightside_config" title="Setting"><i class="fa fa-cog" aria-hidden="true"></i></div><i class="fa fa-list-ul close" id="mobile-toc-button" title="Table of Contents" aria-hidden="true"></i><i class="fa fa-arrow-up" id="go-up" title="Back to top" aria-hidden="true"></i></div></section><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/medium-zoom/dist/medium-zoom.min.js"></script><script async src="/js/search/local-search.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.15/dist/snackbar.min.js"></script><script id="ribbon" src="/js/third-party/canvas-ribbon.js" size="150" alpha="0.7" zIndex="-1" mobile="true" data-click="true"></script><script id="ribbon_piao" mobile="true" src="/js/third-party/piao.js"></script><script id="canvas_nest" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="/js/third-party/canvas-nest.js"></script><script src="/js/third-party/activate-power-mode.js"></script><script>POWERMODE.colorful = true; // make power mode colorful
+POWERMODE.shake = true; // turn off shake
+document.body.addEventListener('input', POWERMODE);
+</script><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@latest/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/lazysizes@latest/lazysizes.min.js" async=""></script><script src="/js/third-party/click_heart.js"></script><script src="/js/third-party/ClickShowText.js"></script><div class="search-dialog" id="local-search"><div class="search-dialog__title" id="local-search-title">Tìm Kiếm</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="Tìm kiếm Bài viết"></div></div></div><hr><div id="local-search-results"><div id="local-hits"></div><div id="local-stats"><div class="local-search-stats__hr" id="hr"><span>Powered by</span> <a href="https://github.com/wzpan/hexo-generator-search" target="_blank" rel="noopener" style="color:#49B1F5;">hexo-generator-search</a></div></div></div><span class="search-close-button"><i class="fa fa-times"></i></span></div><div class="search-mask"></div></body></html>

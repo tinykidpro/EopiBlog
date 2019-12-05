@@ -1,0 +1,121 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><title>1. Tổng quan giới thiệu về Wazuh | Eopi Blog</title><meta name="description" content="1. Tổng quan giới thiệu về Wazuh"><meta name="keywords" content="Wazuh,SOC,SIEM,IDS/IPS"><meta name="author" content="Eopi Noriko"><meta name="copyright" content="Eopi Noriko"><meta name="format-detection" content="telephone=no"><link rel="shortcut icon" href="/img/favicon.ico"><link rel="preconnect" href="//cdn.jsdelivr.net"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="1. Tổng quan giới thiệu về Wazuh"><meta name="twitter:description" content="1. Tổng quan giới thiệu về Wazuh"><meta name="twitter:image" content="https://eopi.loliteam.net/img/wazuh.png"><meta property="og:type" content="article"><meta property="og:title" content="1. Tổng quan giới thiệu về Wazuh"><meta property="og:url" content="https://eopi.loliteam.net/2019/12/04/Wazuh/"><meta property="og:site_name" content="Eopi Blog"><meta property="og:description" content="1. Tổng quan giới thiệu về Wazuh"><meta property="og:image" content="https://eopi.loliteam.net/img/wazuh.png"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><script src="https://cdn.jsdelivr.net/npm/js-cookie/dist/js.cookie.min.js"></script><script>const autoChangeMode = 'false'
+var t = Cookies.get("theme");
+if (autoChangeMode == '1'){
+const isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches
+const isLightMode = window.matchMedia("(prefers-color-scheme: light)").matches
+const isNotSpecified = window.matchMedia("(prefers-color-scheme: no-preference)").matches
+const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+if (t === undefined){
+  if (isLightMode) activateLightMode()
+  else if (isDarkMode) activateDarkMode()
+  else if (isNotSpecified || hasNoSupport){
+    console.log('You specified no preference for a color scheme or your browser does not support it. I Schedule dark mode during night time.')
+    now = new Date();
+    hour = now.getHours();
+    isNight = hour < 6 || hour >= 18
+    isNight ? activateDarkMode() : activateLightMode()
+}
+} else if (t == 'light') activateLightMode()
+else activateDarkMode()
+
+
+} else if (autoChangeMode == '2'){
+  now = new Date();
+  hour = now.getHours();
+  isNight = hour < 6 || hour >= 18
+  if(t === undefined) isNight? activateDarkMode() : activateLightMode()
+  else if (t === 'light') activateLightMode()
+  else activateDarkMode() 
+} else {
+  if ( t == 'dark' ) activateDarkMode()
+  else if ( t == 'light') activateLightMode()
+}
+
+function activateDarkMode(){
+  document.documentElement.setAttribute('data-theme', 'dark')
+  if (document.querySelector('meta[name="theme-color"]') !== null){
+    document.querySelector('meta[name="theme-color"]').setAttribute('content','#000')
+  }
+}
+function activateLightMode(){
+  document.documentElement.setAttribute('data-theme', 'light')
+  if (document.querySelector('meta[name="theme-color"]') !== null){
+  document.querySelector('meta[name="theme-color"]').setAttribute('content','#fff')
+  }
+}</script><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.15/dist/snackbar.min.css"><link rel="canonical" href="https://eopi.loliteam.net/2019/12/04/Wazuh/"><link rel="prev" title="2. Kiến trúc và cơ chế hoạt động của Wazuh" href="/https:/eopi.loliteam.net/2019/12/04/Wazuh2/"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Titillium+Web"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"Chúng tôi không tìm thấy bất kỳ kết quả nào cho tìm kiếm: ${query}"}},
+  translate: undefined,
+  highlight_copy: 'true',
+  highlight_lang: 'true',
+  highlight_shrink: 'false',
+  copy: {
+    success: 'Sao chép thành công',
+    error: 'Sao chép lỗi',
+    noSupport: 'Trình duyệt không hỗ trợ'
+  },
+  bookmark: {
+    title: 'Snackbar.bookmark.title',
+    message_prev: 'Nhấn',
+    message_next: 'để đánh dấu trang này'
+  },
+  runtime_unit: 'days',
+  copyright: undefined,
+  copy_copyright_js: false,
+  ClickShowText: {"text":"Eopi,LoLi,Shiina","fontSize":"15px"},
+  medium_zoom: 'true',
+  Snackbar: {"bookmark":{"title":"Snackbar.bookmark.title","message_prev":"Nhấn","message_next":"để đánh dấu trang này"},"chs_to_cht":"Traditional Chinese Activated Manually","cht_to_chs":"Simplified Chinese Activated Manually","day_to_night":"Light Mode Activated Manually","night_to_day":"Dark Mode Activated Manually","bgLight":"#49b1f5","bgDark":"#2d3035","position":"bottom-left"}
+  
+}</script></head><body><div id="header"> <div id="page-header"><span class="pull_left" id="blog_name"><a class="blog_title" id="site-name" href="/">Eopi Blog</a></span><i class="fa fa-bars fa-fw toggle-menu pull_right close" aria-hidden="true"></i><span class="pull_right menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> Archives</span></a></div></div></span><span class="pull_right" id="search_button"><a class="site-page social-icon search"><i class="fa fa-search fa-fw"></i><span> Search</span></a></span></div></div><div id="mobile-sidebar"><div id="menu_mask"></div><div id="mobile-sidebar-menus"><div class="mobile_author_icon"><img class="lazyload avatar_img" src="/img/avatar.jpg" onerror="onerror=null;src='/img/friend_404.gif'"></div><div class="mobile_post_data"><div class="mobile_data_item is_center"><div class="mobile_data_link"><a href="/archives/"><div class="headline">Articles</div><div class="length_num">14</div></a></div></div><div class="mobile_data_item is_center">      <div class="mobile_data_link"><a href="/tags/"><div class="headline">Tags</div><div class="length_num">9</div></a></div></div></div><hr><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> Archives</span></a></div></div></div><div id="mobile-sidebar-toc"><div class="toc_mobile_headline">Mục lục</div><ol class="toc_mobile_items"><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#1-Gioi-thieu-ve-Wazuh"><span class="toc_mobile_items-number">1.</span> <span class="toc_mobile_items-text">1. Giới thiệu về Wazuh</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#2-Cac-thanh-phan"><span class="toc_mobile_items-number">2.</span> <span class="toc_mobile_items-text">2. Các thành phần</span></a><ol class="toc_mobile_items-child"><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#2-1-Wazuh-agent"><span class="toc_mobile_items-number">2.1.</span> <span class="toc_mobile_items-text">2.1. Wazuh agent</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#2-2-Wazuh-server"><span class="toc_mobile_items-number">2.2.</span> <span class="toc_mobile_items-text">2.2. Wazuh server</span></a></li></ol></li></ol></div></div><div id="body-wrap"><div id="web_bg" data-type="color"></div><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true">     </i><div class="auto_open" id="sidebar"><div class="sidebar-toc"><div class="sidebar-toc__title">Mục lục</div><div class="sidebar-toc__progress"><span class="progress-notice">Bạn đã đọc</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar">     </div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-Gioi-thieu-ve-Wazuh"><span class="toc-number">1.</span> <span class="toc-text">1. Giới thiệu về Wazuh</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-Cac-thanh-phan"><span class="toc-number">2.</span> <span class="toc-text">2. Các thành phần</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-Wazuh-agent"><span class="toc-number">2.1.</span> <span class="toc-text">2.1. Wazuh agent</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-Wazuh-server"><span class="toc-number">2.2.</span> <span class="toc-text">2.2. Wazuh server</span></a></li></ol></li></ol></div></div></div><div id="content-outer"><div id="top-container" style="background-image: url(/img/wazuh.png)"><div id="post-info"><div id="post-title"><div class="posttitle">1. Tổng quan giới thiệu về Wazuh</div></div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> Created 2019-12-04<span class="post-meta__separator">|</span><i class="fa fa-history" aria-hidden="true"></i> Updated 2019-12-05</time><div class="post-meta-wordcount"><i class="fa fa-eye post-meta__icon" aria-hidden="true">       </i><span>Post View: </span><span id="busuanzi_value_page_pv"></span></div></div></div></div><div class="layout layout_post" id="content-inner">   <article id="post"><div class="article-container" id="post-content"><h2 id="1-Gioi-thieu-ve-Wazuh"><a href="#1-Gioi-thieu-ve-Wazuh" class="headerlink" title="1. Giới thiệu về Wazuh"></a>1. Giới thiệu về Wazuh</h2><p>Wazuh là 1 project mã nguồn dùng cho việc bảo vệ an ninh. Được xây dựng từ các thành phần : OSSEC HIDS, OpenSCAP và Elastic Stack.</p>
+<p><img alt="wazuh" data-src="https://github.com/hocchudong/ghichep-SOC/raw/master/images/wazuh-00.png" class="lazyload"></p>
+<ul>
+<li><p>OSSEC HIDS : host-based Intrusion Detection System (HIDS) được dùng cho việc phát hiện xâm nhập, hiển thị và giám stas. Nó dựa vào 1 multi-platform agent cho việc đẩy dữ liệu hệ thống (log message, file hash và phát hiện bất thường) tới 1 máy quản lý trung tâm, nơi sẽ phân tích và xử lý, dựa trên các cảnh báo an ninh. Các agent truyền event data event data tới máy quản lý trung tâm thông qua kênh được bảo mật và xác thực.<br>OSSEC HIDS cung cấp syslog server trung tâm và hệ thống giám sát không cần agent, cung cấp việc giám sát tới các event và thay đổi trên các thiết bị không cài được agent như firewall, switch, router, access point, thiết bị mạng….</p>
+</li>
+<li><p>OpenSCAP<br>OpenSCAP là 1 OVAL (Open Vulnerability Assesment Language) và XCCDF (Extensible Configuration Checklist Description Format) được dùng để kiểm tra cấu hình hệ thống và phát hiện các ứng dụng dễ bị tấn công.<br>Nó được biết đến như là một công cụ được thiết kế để kiểm tra việc tuân thủ an ninh của hệ thống sử dụng các tiêu chuẩn an ninh dùng cho môi trường doanh nghiệp</p>
+</li>
+<li><p>ELK Stack<br>Sử dụng cho việc thu thập, phân tihcs, index, store, search và hiển thị dữ liệu log. </p>
+</li>
+</ul>
+<h2 id="2-Cac-thanh-phan"><a href="#2-Cac-thanh-phan" class="headerlink" title="2. Các thành phần"></a>2. Các thành phần</h2><h3 id="2-1-Wazuh-agent"><a href="#2-1-Wazuh-agent" class="headerlink" title="2.1. Wazuh agent"></a>2.1. Wazuh agent</h3><p>Chạy trên : Windows, Linux, Solaris, BSD hoặc MAC OS. Dùng thu thập các dạng khác nhau của dữ liệu hệ thống và ứng dụng. Dữ liệu được chuyển tới Wazuh server thông qua 1 kênh được mã hóa và xác thực. Để thiết lập kênh này, 1 quá trình đăng ký bao gồm pre-shared key duy nhất được thiết lập.</p>
+<p>Các agent có thể dùng để giám sát server vật lý, máy ảo, cloud instance (AWS, Azure hoặc Google cloud). Các các cài đặt pre-compile agent có sẵn cho các OS : Linux, AIX, Solaris, Windows và Darwin (Mac OS X).</p>
+<p>Trên các OS Unix-based, agent chạy trên multiple process, các process này liên lạc với nhau thông qua local Unix domain socket. 1 trong các process này phụ trách việc liên lạc và gửi dữ liệu tới Wazuh server. Trên Windows, chỉ có 1 agent process chạy trên multiple task sử dụng mutexes.</p>
+<p>Các agent task hoặc process khác nhau được dùng để giám sát hệ thống theo các cách khác nhau (giám sát sự thay đổi về file, đọc log, quét các thay đổi hệ thống).</p>
+<p>Sơ đồ sau thể hiện các internal task và process diễn ra trên các agent level.</p>
+<p><img alt="wazuh" data-src="https://github.com/hocchudong/ghichep-SOC/raw/master/images/wazuh-01.png" class="lazyload"></p>
+<p>Tất cả các process agent có mục tiêu và thiết lập khác nhau. </p>
+<ul>
+<li><strong>Rootcheck</strong> : Thực hiện các task liên quan đến phát hiện về <code>Rootkits</code>, <code>malware</code> và các bất thường của hệ thống. Nó chạy 1 số công cụ kiểm tra an ninh cơ bản dựa vào các file cấu hình hệ thống.</li>
+<li><strong>Log Collector</strong>: Dùng để đọc và thu thập các log message, bao gồm các các file flat log như Windows event log và thậm chí là Windows Event Channel. Nó cũng được cấu hình để chạy định kỳ và bắt 1 số output của các câu lệnh cụ thể.</li>
+<li><strong>Syscheck</strong> : Process này thực hiện file integrity monitoring (FIM) (Giám sát tính toàn vẹn của file). Nó cũng có thể giám sát registry key trên Windows. Nó sẽ bắt các thay đổi về nội dung file, quyền và các thuộc tính khác, cũng như phát hiện việc tạo và xóa file.</li>
+<li><strong>OpenSCAP</strong> : Được dùng để publish OVAL và XCCDF dựa vào các hồ sơ bảo mật cơ bản, định kỳ quét hệ thống, nó sẽ phát hiện được các ứng dụng và cấu hình sẽ bị tấn công, không tuân theo các chuẩn được xác định theo CIS (Center of Internet Security)</li>
+<li><strong>Agent Daemon</strong> : Process nhận dữ liệu được tạo hoặc được thu thập bởi tất cả các thành phần agent khác. Nó nén, mã hóa và phân phối dữ liệu tới server thông qua kênh được xác thực. Process này chạy trên “chroot” enviroment được cô lập, có nghĩa rằng nó sẽ hạn chế truy cập tới các hệ thống được giám sát. Điều này cải thiện được an toàn cho agent vì process đó là process duy nhất kết nối tới mạng.</li>
+</ul>
+<p>Chú giải : </p>
+<ul>
+<li>Rootkits : Phần mềm hoặc công cụ phần mềm che giấu sự tồn tại của 1 phần mềm khác, thường là virus xâm nhập vào hệ thống.</li>
+<li>Malware : Mọi loại mã gây hại trên máy tính người dùng : spyware, trojan, virus…</li>
+</ul>
+<h3 id="2-2-Wazuh-server"><a href="#2-2-Wazuh-server" class="headerlink" title="2.2. Wazuh server"></a>2.2. Wazuh server</h3><p>Thành phần server phụ trách việc phân tích dữ liệu nhận từ agent, tạo các ngưỡng cảnh báo khi 1 event ánh xạ với rule (phát hiện xâm nhập, thay đổi file, cấu hình không tương thích với policy, rootfit…)</p>
+<p><img alt="wazuh" data-src="https://github.com/hocchudong/ghichep-SOC/raw/master/images/wazuh-02.png" class="lazyload"></p>
+<p>Server thông thường chạy các thành phần agent với mục tiêu giám sát chính nó. Một số thành phần server chính là : </p>
+<ul>
+<li><strong>Registration service</strong> : Được dùng để register agent mới được việc cung cấp và phân phối các key xác thực pre-shared, các key này là độc nhất với mỗi agent. Process này chạy như 1 network service và hỗ trợ việc xác thực qua TLS/SSL với 1 fixed password.</li>
+<li><strong>Remote daemon service</strong> : Service này nhận dữ liệu từ agent. Nó sử dụng pre-shared key để xác thực định danh của mỗi agent và mã hóa giao tiếp với chúng.</li>
+<li><strong>Analysis daemon</strong> : Process này thực hiện việc phân tích dữ liệu. Nó sử dụng các bộ giải mã để nhận dạng thông tin được xử lý (các Windows event, SSHD logs…) và sau đó giải nén các yếu tố dữ liệu thích hợp từ log message (source ip, event id, user…) Sau đó, bằng cách sử dụng các rule được định nghĩa bằng cách pattern đặc biệt trên bộ giải mã, nó sẽ tạo các ngưỡng cảnh báo thậm chí ra lệnh để thực hiện các biện pháp đối phó như chặn IP trên firewall.</li>
+<li><strong>RESTful API</strong> : Cung cấp interface để quản lý và giám sát cấ hình và trạng thái triển khai của các agent. Nó cũng được dùng bởi Wazuh web interface (Kibana)</li>
+</ul>
+<p>Wazuh tích hợp với Elastic stack để cung cấp các log message đã được giải mã và đánh index bởi Elasticsearch, cũng như là 1 web console real-time cho việc cảnh báo và phân tích log. Wazuh web interface (chạy trên Kibana) có thể dùng để quản lý và giám sát hạ tầng Wazuh</p>
+<p>Một Elasticsearch index là một tập hợp các document có một chút các đặc trưng tương tự nhau (như các trường chung hoặc các yêu cầu về data retention được chia sẻ). Wazuh sử dụng 3 index khác nhau, được tạo hàng ngày và lưu trữ các dạng event khác nhau : </p>
+<ul>
+<li><strong>Wazuh-alert</strong> : Index cho các cảnh báo được sinh ra bởi Wazun server mỗi khi một event ứng với rule tạo ra.</li>
+<li><strong>Wazuh-events</strong> : Index cho tất cả các event (archive data) được nhận từ các agent, bất kể có ứng với rule hay không.</li>
+<li><strong>Wazuh-monitoring</strong>: Index cho dữ liệu liên quan đến trạng thái agent. Nó được dùng bởi web interface cho việc hiển thị agent đã hoặc đang “Active”, “Disconnect” hoặc “Never connected”</li>
+</ul>
+<p>Với các index trên, document là các cảnh báo, archived event hoặc status event riêng lẻ.</p>
+<p>Một Elasticsearcg index được chia tới 1 hoặc nhiều shard, và mỗi shard có thể có 1 hoặc nhiều replica. Mỗi primary và replica shard là 1 Lucene index đơn lẻ. Vì vậy 1 Elasticsearch index được tạo bởi nhiều Lucene index. Khi 1 tìm kiếm chạy trên 1 Elasticsearch index, search đó được xử lý trên các shard song song, và kết quả được merge lại. Việc chia nhỏ các Elasticsearch tới nhiều shard và replica cũng được dùng với Elasticsearch cluster với mục tiêu là mở rộng việc tìm kiếm và HA. Một Elasticsearch cluster single-node thường chỉ có 1 shard mỗi index và không có replica.</p>
+</div></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="mailto:undefined" target="_blank" rel="noopener">Eopi Noriko</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="/https:/eopi.loliteam.net/2019/12/04/Wazuh/">https://eopi.loliteam.net/2019/12/04/Wazuh/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Wazuh/">Wazuh    </a><a class="post-meta__tags" href="/tags/SOC/">SOC    </a><a class="post-meta__tags" href="/tags/SIEM/">SIEM    </a><a class="post-meta__tags" href="/tags/IDS-IPS/">IDS/IPS    </a></div><div class="post_share"><div class="social-share" data-image="/img/wazuh.png" data-sites="facebook,twitter"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/css/share.min.css"><script src="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/js/social-share.min.js"></script></div></div><nav class="pagination_post" id="pagination"><div class="prev-post pull-full"><a href="/2019/12/04/Wazuh2/"><img class="prev_cover lazyload" data-src="/img/wazuh.png" onerror="onerror=null;src='/img/404.jpg'"><div class="label">Bài đăng trước</div><div class="prev_info"><span>2. Kiến trúc và cơ chế hoạt động của Wazuh</span></div></a></div></nav><div class="relatedPosts"><div class="relatedPosts_headline"><i class="fa fa-fw fa-thumbs-up" aria-hidden="true"></i><span> Recommend</span></div><div class="relatedPosts_list"><div class="relatedPosts_item"><a href="/2019/12/04/Wazuh2/" title="2. Kiến trúc và cơ chế hoạt động của Wazuh"><img class="relatedPosts_cover lazyload"data-src="/img/wazuh.png"><div class="relatedPosts_title">2. Kiến trúc và cơ chế hoạt động của Wazuh</div></a></div><div class="relatedPosts_item"><a href="/2019/12/04/Wazuh3/" title="3. Các usecase sử dụng của Wazuh"><img class="relatedPosts_cover lazyload"data-src="/img/wazuh.png"><div class="relatedPosts_title">3. Các usecase sử dụng của Wazuh</div></a></div><div class="relatedPosts_item"><a href="/2019/12/05/Wazuh4/" title="4. Thực hành cài đặt Wazuh Server"><img class="relatedPosts_cover lazyload"data-src="/img/wazuh.png"><div class="relatedPosts_title">4. Thực hành cài đặt Wazuh Server</div></a></div></div><div class="clear_both"></div></div></div></div><footer id="footer" style="background-image: url(/img/wazuh.png)"><div id="footer-wrap"><div class="copyright">&copy;2019 By Eopi Noriko</div><div class="framework-info"><span>Driven </span><a href="http://hexo.io" target="_blank" rel="noopener"><span>Hexo</span></a><span class="footer-separator">|</span><span>Theme </span><a href="https://github.com/jerryc127/hexo-theme-butterfly" target="_blank" rel="noopener"><span>Butterfly</span></a></div></div></footer></div><section class="rightside" id="rightside"><div id="rightside-config-hide"><i class="fa fa-book" id="readmode" title="Read Mode"></i><i class="fa fa-plus" id="font_plus" title="Increase font size"></i><i class="fa fa-minus" id="font_minus" title="Decrease font size"></i><i class="darkmode fa fa-moon-o" id="darkmode" title="Dark Mode"></i></div><div id="rightside-config-show"><div id="rightside_config" title="Setting"><i class="fa fa-cog" aria-hidden="true"></i></div><i class="fa fa-list-ul close" id="mobile-toc-button" title="Table of Contents" aria-hidden="true"></i><i class="fa fa-arrow-up" id="go-up" title="Back to top" aria-hidden="true"></i></div></section><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/medium-zoom/dist/medium-zoom.min.js"></script><script async src="/js/search/local-search.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.15/dist/snackbar.min.js"></script><script id="ribbon" src="/js/third-party/canvas-ribbon.js" size="150" alpha="0.7" zIndex="-1" mobile="true" data-click="true"></script><script id="ribbon_piao" mobile="true" src="/js/third-party/piao.js"></script><script id="canvas_nest" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="/js/third-party/canvas-nest.js"></script><script src="/js/third-party/activate-power-mode.js"></script><script>POWERMODE.colorful = true; // make power mode colorful
+POWERMODE.shake = true; // turn off shake
+document.body.addEventListener('input', POWERMODE);
+</script><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@latest/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/lazysizes@latest/lazysizes.min.js" async=""></script><script src="/js/third-party/click_heart.js"></script><script src="/js/third-party/ClickShowText.js"></script><div class="search-dialog" id="local-search"><div class="search-dialog__title" id="local-search-title">Tìm Kiếm</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="Tìm kiếm Bài viết"></div></div></div><hr><div id="local-search-results"><div id="local-hits"></div><div id="local-stats"><div class="local-search-stats__hr" id="hr"><span>Powered by</span> <a href="https://github.com/wzpan/hexo-generator-search" target="_blank" rel="noopener" style="color:#49B1F5;">hexo-generator-search</a></div></div></div><span class="search-close-button"><i class="fa fa-times"></i></span></div><div class="search-mask"></div></body></html>

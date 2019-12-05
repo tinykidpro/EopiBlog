@@ -1,0 +1,531 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><title>Hướng dẫn dùng Github cho SysAdmin | Eopi Blog</title><meta name="description" content="Hướng dẫn dùng Github cho SysAdmin"><meta name="keywords" content="Git,Github,Sysadmin"><meta name="author" content="Eopi Noriko"><meta name="copyright" content="Eopi Noriko"><meta name="format-detection" content="telephone=no"><link rel="shortcut icon" href="/img/favicon.ico"><link rel="preconnect" href="//cdn.jsdelivr.net"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Hướng dẫn dùng Github cho SysAdmin"><meta name="twitter:description" content="Hướng dẫn dùng Github cho SysAdmin"><meta name="twitter:image" content="https://eopi.loliteam.net/img/github.jpg"><meta property="og:type" content="article"><meta property="og:title" content="Hướng dẫn dùng Github cho SysAdmin"><meta property="og:url" content="https://eopi.loliteam.net/2019/12/05/github/"><meta property="og:site_name" content="Eopi Blog"><meta property="og:description" content="Hướng dẫn dùng Github cho SysAdmin"><meta property="og:image" content="https://eopi.loliteam.net/img/github.jpg"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><script src="https://cdn.jsdelivr.net/npm/js-cookie/dist/js.cookie.min.js"></script><script>const autoChangeMode = 'false'
+var t = Cookies.get("theme");
+if (autoChangeMode == '1'){
+const isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches
+const isLightMode = window.matchMedia("(prefers-color-scheme: light)").matches
+const isNotSpecified = window.matchMedia("(prefers-color-scheme: no-preference)").matches
+const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+if (t === undefined){
+  if (isLightMode) activateLightMode()
+  else if (isDarkMode) activateDarkMode()
+  else if (isNotSpecified || hasNoSupport){
+    console.log('You specified no preference for a color scheme or your browser does not support it. I Schedule dark mode during night time.')
+    now = new Date();
+    hour = now.getHours();
+    isNight = hour < 6 || hour >= 18
+    isNight ? activateDarkMode() : activateLightMode()
+}
+} else if (t == 'light') activateLightMode()
+else activateDarkMode()
+
+
+} else if (autoChangeMode == '2'){
+  now = new Date();
+  hour = now.getHours();
+  isNight = hour < 6 || hour >= 18
+  if(t === undefined) isNight? activateDarkMode() : activateLightMode()
+  else if (t === 'light') activateLightMode()
+  else activateDarkMode() 
+} else {
+  if ( t == 'dark' ) activateDarkMode()
+  else if ( t == 'light') activateLightMode()
+}
+
+function activateDarkMode(){
+  document.documentElement.setAttribute('data-theme', 'dark')
+  if (document.querySelector('meta[name="theme-color"]') !== null){
+    document.querySelector('meta[name="theme-color"]').setAttribute('content','#000')
+  }
+}
+function activateLightMode(){
+  document.documentElement.setAttribute('data-theme', 'light')
+  if (document.querySelector('meta[name="theme-color"]') !== null){
+  document.querySelector('meta[name="theme-color"]').setAttribute('content','#fff')
+  }
+}</script><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.15/dist/snackbar.min.css"><link rel="canonical" href="https://eopi.loliteam.net/2019/12/05/github/"><link rel="next" title="8. Thao tác với container" href="/https:/eopi.loliteam.net/2019/12/05/docker8/"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Titillium+Web"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"Chúng tôi không tìm thấy bất kỳ kết quả nào cho tìm kiếm: ${query}"}},
+  translate: undefined,
+  highlight_copy: 'true',
+  highlight_lang: 'true',
+  highlight_shrink: 'false',
+  copy: {
+    success: 'Sao chép thành công',
+    error: 'Sao chép lỗi',
+    noSupport: 'Trình duyệt không hỗ trợ'
+  },
+  bookmark: {
+    title: 'Snackbar.bookmark.title',
+    message_prev: 'Nhấn',
+    message_next: 'để đánh dấu trang này'
+  },
+  runtime_unit: 'days',
+  copyright: undefined,
+  copy_copyright_js: false,
+  ClickShowText: {"text":"Eopi,LoLi,Shiina","fontSize":"15px"},
+  medium_zoom: 'true',
+  Snackbar: {"bookmark":{"title":"Snackbar.bookmark.title","message_prev":"Nhấn","message_next":"để đánh dấu trang này"},"chs_to_cht":"Traditional Chinese Activated Manually","cht_to_chs":"Simplified Chinese Activated Manually","day_to_night":"Light Mode Activated Manually","night_to_day":"Dark Mode Activated Manually","bgLight":"#49b1f5","bgDark":"#2d3035","position":"bottom-left"}
+  
+}</script></head><body><div id="header"> <div id="page-header"><span class="pull_left" id="blog_name"><a class="blog_title" id="site-name" href="/">Eopi Blog</a></span><i class="fa fa-bars fa-fw toggle-menu pull_right close" aria-hidden="true"></i><span class="pull_right menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> Archives</span></a></div></div></span><span class="pull_right" id="search_button"><a class="site-page social-icon search"><i class="fa fa-search fa-fw"></i><span> Search</span></a></span></div></div><div id="mobile-sidebar"><div id="menu_mask"></div><div id="mobile-sidebar-menus"><div class="mobile_author_icon"><img class="lazyload avatar_img" src="/img/avatar.jpg" onerror="onerror=null;src='/img/friend_404.gif'"></div><div class="mobile_post_data"><div class="mobile_data_item is_center"><div class="mobile_data_link"><a href="/archives/"><div class="headline">Articles</div><div class="length_num">14</div></a></div></div><div class="mobile_data_item is_center">      <div class="mobile_data_link"><a href="/tags/"><div class="headline">Tags</div><div class="length_num">9</div></a></div></div></div><hr><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> Archives</span></a></div></div></div><div id="mobile-sidebar-toc"><div class="toc_mobile_headline">Mục lục</div><ol class="toc_mobile_items"><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#Git-va-Github-cho-sysadmin"><span class="toc_mobile_items-number">1.</span> <span class="toc_mobile_items-text">Git và Github cho sysadmin</span></a><ol class="toc_mobile_items-child"><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#Muc-luc"><span class="toc_mobile_items-number">1.1.</span> <span class="toc_mobile_items-text">Mục lục</span></a></li></ol></li><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#I-Mo-dau"><span class="toc_mobile_items-number">2.</span> <span class="toc_mobile_items-text">I. Mở đầu</span></a><ol class="toc_mobile_items-child"><li class="toc_mobile_items-item toc_mobile_items-level-4"><a class="toc_mobile_items-link" href="#Mot-so-khai-niem-can-lam-ro"><span class="toc_mobile_items-number">2.0.1.</span> <span class="toc_mobile_items-text">Một số khái niệm cần làm rõ</span></a></li></ol></li></ol></li><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#II-Ngon-ngu-Markdown"><span class="toc_mobile_items-number">3.</span> <span class="toc_mobile_items-text">II. Ngôn ngữ Markdown</span></a><ol class="toc_mobile_items-child"><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#1-The-tieu-de"><span class="toc_mobile_items-number">3.1.</span> <span class="toc_mobile_items-text">1. Thẻ tiêu đề</span></a></li></ol></li></ol></li><li class="toc_mobile_items-item toc_mobile_items-level-1"><a class="toc_mobile_items-link" href="#1-Tieu-de-cap-1"><span class="toc_mobile_items-number"></span> <span class="toc_mobile_items-text">1.Tiêu đề cấp 1</span></a><ol class="toc_mobile_items-child"><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#2-Tieu-de-cap-2"><span class="toc_mobile_items-number">1.</span> <span class="toc_mobile_items-text">2.Tiêu đề cấp 2</span></a><ol class="toc_mobile_items-child"><li class="toc_mobile_items-item toc_mobile_items-level-6"><a class="toc_mobile_items-link" href="#6-Tieu-de-cap-6"><span class="toc_mobile_items-number">1.0.0.0.1.</span> <span class="toc_mobile_items-text">6.Tiêu đề cấp 6</span></a></li></ol></li></ol></li></ol></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#2-Chen-link-chen-anh"><span class="toc_mobile_items-number">1.1.</span> <span class="toc_mobile_items-text">2. Chèn link, chèn ảnh</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#3-Ky-tu-in-dam-in-nghieng"><span class="toc_mobile_items-number">1.2.</span> <span class="toc_mobile_items-text">3. Ký tự in đậm, in nghiêng</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#4-Trich-dan-bo-chu"><span class="toc_mobile_items-number">1.3.</span> <span class="toc_mobile_items-text">4. Trích dẫn, bo chữ</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#5-Gach-dau-dong"><span class="toc_mobile_items-number">1.4.</span> <span class="toc_mobile_items-text">5. Gạch đầu dòng</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#6-Tao-bang"><span class="toc_mobile_items-number">1.5.</span> <span class="toc_mobile_items-text">6. Tạo bảng</span></a></li></ol></li><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#III-Cac-thao-tac-voi-Git-va-Github"><span class="toc_mobile_items-number">2.</span> <span class="toc_mobile_items-text">III. Các thao tác với Git và Github</span></a><ol class="toc_mobile_items-child"><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#0-Repo"><span class="toc_mobile_items-number">2.1.</span> <span class="toc_mobile_items-text">0. Repo</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#1-Cai-dat"><span class="toc_mobile_items-number">2.2.</span> <span class="toc_mobile_items-text">1. Cài đặt</span></a><ol class="toc_mobile_items-child"><li class="toc_mobile_items-item toc_mobile_items-level-4"><a class="toc_mobile_items-link" href="#1-1-Linux"><span class="toc_mobile_items-number">2.2.1.</span> <span class="toc_mobile_items-text">1.1. Linux</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-4"><a class="toc_mobile_items-link" href="#1-2-Windows"><span class="toc_mobile_items-number">2.2.2.</span> <span class="toc_mobile_items-text">1.2. Windows</span></a></li></ol></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#2-Thao-tac-voi-Repo"><span class="toc_mobile_items-number">2.3.</span> <span class="toc_mobile_items-text">2. Thao tác với Repo</span></a><ol class="toc_mobile_items-child"><li class="toc_mobile_items-item toc_mobile_items-level-4"><a class="toc_mobile_items-link" href="#2-1-Tren-Linux"><span class="toc_mobile_items-number">2.3.1.</span> <span class="toc_mobile_items-text">2.1. Trên Linux</span></a><ol class="toc_mobile_items-child"><li class="toc_mobile_items-item toc_mobile_items-level-5"><a class="toc_mobile_items-link" href="#2-1-1-Tao-moi"><span class="toc_mobile_items-number">2.3.1.1.</span> <span class="toc_mobile_items-text">2.1.1. Tạo mới</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-5"><a class="toc_mobile_items-link" href="#2-1-2-Clone"><span class="toc_mobile_items-number">2.3.1.2.</span> <span class="toc_mobile_items-text">2.1.2. Clone</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-5"><a class="toc_mobile_items-link" href="#2-1-3-Add-commit-push"><span class="toc_mobile_items-number">2.3.1.3.</span> <span class="toc_mobile_items-text">2.1.3. Add, commit, push</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-5"><a class="toc_mobile_items-link" href="#2-1-4-Pull"><span class="toc_mobile_items-number">2.3.1.4.</span> <span class="toc_mobile_items-text">2.1.4. Pull</span></a></li></ol></li><li class="toc_mobile_items-item toc_mobile_items-level-4"><a class="toc_mobile_items-link" href="#2-2-Tren-Windows"><span class="toc_mobile_items-number">2.3.2.</span> <span class="toc_mobile_items-text">2.2. Trên Windows</span></a><ol class="toc_mobile_items-child"><li class="toc_mobile_items-item toc_mobile_items-level-5"><a class="toc_mobile_items-link" href="#2-2-1-Tao-mot-repo-moi"><span class="toc_mobile_items-number">2.3.2.1.</span> <span class="toc_mobile_items-text">2.2.1. Tạo một repo mới</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-5"><a class="toc_mobile_items-link" href="#2-2-2-Clone"><span class="toc_mobile_items-number">2.3.2.2.</span> <span class="toc_mobile_items-text">2.2.2. Clone</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-5"><a class="toc_mobile_items-link" href="#2-2-3-Add-commit-push-pull"><span class="toc_mobile_items-number">2.3.2.3.</span> <span class="toc_mobile_items-text">2.2.3. Add, commit, push, pull</span></a></li></ol></li></ol></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#3-Thao-tac-voi-to-chuc-trong-Github"><span class="toc_mobile_items-number">2.4.</span> <span class="toc_mobile_items-text">3. Thao tác với tổ chức trong Github</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#4-Thao-tac-voi-nhanh-branch"><span class="toc_mobile_items-number">2.5.</span> <span class="toc_mobile_items-text">4. Thao tác với nhánh (branch)</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#5-Issues"><span class="toc_mobile_items-number">2.6.</span> <span class="toc_mobile_items-text">5. Issues</span></a></li></ol></li></ol></div></div><div id="body-wrap"><div id="web_bg" data-type="color"></div><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true">     </i><div class="auto_open" id="sidebar"><div class="sidebar-toc"><div class="sidebar-toc__title">Mục lục</div><div class="sidebar-toc__progress"><span class="progress-notice">Bạn đã đọc</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar">     </div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Git-va-Github-cho-sysadmin"><span class="toc-number">1.</span> <span class="toc-text">Git và Github cho sysadmin</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Muc-luc"><span class="toc-number">1.1.</span> <span class="toc-text">Mục lục</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#I-Mo-dau"><span class="toc-number">2.</span> <span class="toc-text">I. Mở đầu</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Mot-so-khai-niem-can-lam-ro"><span class="toc-number">2.0.1.</span> <span class="toc-text">Một số khái niệm cần làm rõ</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#II-Ngon-ngu-Markdown"><span class="toc-number">3.</span> <span class="toc-text">II. Ngôn ngữ Markdown</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-The-tieu-de"><span class="toc-number">3.1.</span> <span class="toc-text">1. Thẻ tiêu đề</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-Tieu-de-cap-1"><span class="toc-number"></span> <span class="toc-text">1.Tiêu đề cấp 1</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-Tieu-de-cap-2"><span class="toc-number">1.</span> <span class="toc-text">2.Tiêu đề cấp 2</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#6-Tieu-de-cap-6"><span class="toc-number">1.0.0.0.1.</span> <span class="toc-text">6.Tiêu đề cấp 6</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-Chen-link-chen-anh"><span class="toc-number">1.1.</span> <span class="toc-text">2. Chèn link, chèn ảnh</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-Ky-tu-in-dam-in-nghieng"><span class="toc-number">1.2.</span> <span class="toc-text">3. Ký tự in đậm, in nghiêng</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-Trich-dan-bo-chu"><span class="toc-number">1.3.</span> <span class="toc-text">4. Trích dẫn, bo chữ</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-Gach-dau-dong"><span class="toc-number">1.4.</span> <span class="toc-text">5. Gạch đầu dòng</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-Tao-bang"><span class="toc-number">1.5.</span> <span class="toc-text">6. Tạo bảng</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#III-Cac-thao-tac-voi-Git-va-Github"><span class="toc-number">2.</span> <span class="toc-text">III. Các thao tác với Git và Github</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#0-Repo"><span class="toc-number">2.1.</span> <span class="toc-text">0. Repo</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-Cai-dat"><span class="toc-number">2.2.</span> <span class="toc-text">1. Cài đặt</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-1-Linux"><span class="toc-number">2.2.1.</span> <span class="toc-text">1.1. Linux</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-2-Windows"><span class="toc-number">2.2.2.</span> <span class="toc-text">1.2. Windows</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-Thao-tac-voi-Repo"><span class="toc-number">2.3.</span> <span class="toc-text">2. Thao tác với Repo</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#2-1-Tren-Linux"><span class="toc-number">2.3.1.</span> <span class="toc-text">2.1. Trên Linux</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#2-1-1-Tao-moi"><span class="toc-number">2.3.1.1.</span> <span class="toc-text">2.1.1. Tạo mới</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2-1-2-Clone"><span class="toc-number">2.3.1.2.</span> <span class="toc-text">2.1.2. Clone</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2-1-3-Add-commit-push"><span class="toc-number">2.3.1.3.</span> <span class="toc-text">2.1.3. Add, commit, push</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2-1-4-Pull"><span class="toc-number">2.3.1.4.</span> <span class="toc-text">2.1.4. Pull</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-2-Tren-Windows"><span class="toc-number">2.3.2.</span> <span class="toc-text">2.2. Trên Windows</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#2-2-1-Tao-mot-repo-moi"><span class="toc-number">2.3.2.1.</span> <span class="toc-text">2.2.1. Tạo một repo mới</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2-2-2-Clone"><span class="toc-number">2.3.2.2.</span> <span class="toc-text">2.2.2. Clone</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2-2-3-Add-commit-push-pull"><span class="toc-number">2.3.2.3.</span> <span class="toc-text">2.2.3. Add, commit, push, pull</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-Thao-tac-voi-to-chuc-trong-Github"><span class="toc-number">2.4.</span> <span class="toc-text">3. Thao tác với tổ chức trong Github</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-Thao-tac-voi-nhanh-branch"><span class="toc-number">2.5.</span> <span class="toc-text">4. Thao tác với nhánh (branch)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-Issues"><span class="toc-number">2.6.</span> <span class="toc-text">5. Issues</span></a></li></ol></li></ol></div></div></div><div id="content-outer"><div id="top-container" style="background-image: url(/img/github.jpg)"><div id="post-info"><div id="post-title"><div class="posttitle">Hướng dẫn dùng Github cho SysAdmin</div></div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> Created 2019-12-05<span class="post-meta__separator">|</span><i class="fa fa-history" aria-hidden="true"></i> Updated 2019-12-05</time><div class="post-meta-wordcount"><i class="fa fa-eye post-meta__icon" aria-hidden="true">       </i><span>Post View: </span><span id="busuanzi_value_page_pv"></span></div></div></div></div><div class="layout layout_post" id="content-inner">   <article id="post"><div class="article-container" id="post-content"><h2 id="Git-va-Github-cho-sysadmin"><a href="#Git-va-Github-cho-sysadmin" class="headerlink" title="Git và Github cho sysadmin"></a>Git và Github cho sysadmin</h2><h3 id="Muc-luc"><a href="#Muc-luc" class="headerlink" title="Mục lục"></a>Mục lục</h3><p><a href="#Modau">I. Mở đầu</a></p>
+<p><a href="#ngonngumarkdown">II. Ngôn ngữ Markdown</a></p>
+<ul>
+<li><a href="#thetieude">1. Thẻ tiêu đề</a></li>
+<li><a href="#chenlinkchenanh">2. Chèn link, chèn ảnh</a></li>
+<li><a href="#kytuindaminnghieng">3. Ký tự in đậm, in nghiêng</a></li>
+<li><a href="#trichdanbochu">4. Trích dẫn, bo chữ</a></li>
+<li><a href="#gachdaudong">5. Gạch đầu dòng</a></li>
+<li><a href="#taobang">6. Tạo bảng</a></li>
+<li><a href="#meo">Mẹo</a></li>
+</ul>
+<p><a href="#cacthaotacvoigitvagithub">III. Các thao tác với git và github</a></p>
+<ul>
+<li><p><a href="#repo">0. Repo</a></p>
+</li>
+<li><p><a href="#caidat">1. Cài đặt</a></p>
+<ul>
+<li><a href="#linux">1.1. Linux</a></li>
+<li><a href="#windows">1.2. Windows</a></li>
+</ul>
+</li>
+<li><p><a href="#thaotacvoirepo">2. Thao tác với Repo</a></p>
+<ul>
+<li><a href="#21trenlinux">2.1. Trên Linux</a><ul>
+<li><a href="#211taomoi">2.1.1. Tạo mới</a></li>
+<li><a href="#212clone">2.1.2. Clone</a></li>
+<li><a href="#213addcommitpush">2.1.3. Add, commit, push</a></li>
+<li><a href="#214pull">2.1.4. Pull</a></li>
+</ul>
+</li>
+<li><a href="#22trenwindows">2.2. Trên Windows</a><ul>
+<li><a href="#221taomotrepomoi">2.2.1. Tạo một repo mới</a></li>
+<li><a href="#222clone">2.2.2. Clone</a></li>
+<li><a href="#223">2.2.3. Add, commit, push, pull </a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><a href="#3">3. Thao tác với tổ chức trong Github</a></p>
+</li>
+<li><p><a href="#4">4. Thao tác với nhánh (branch)</a></p>
+</li>
+<li><p><a href="#5">5. Issues</a></p>
+</li>
+</ul>
+<p><a href="#Tongket">Tổng kết</a></p>
+<p>===========================</p>
+<p><a name="Modau"></a></p>
+<h2 id="I-Mo-dau"><a href="#I-Mo-dau" class="headerlink" title="I. Mở đầu"></a>I. Mở đầu</h2><p><code>Git</code> là một phần mềm dùng để quản lý phiên bản của mã nguồn tương tự như <code>SVN</code> nhưng có nhiều ưu điểm hơn, <code>Git</code> đang được sủ dụng rộng rãi hiện nay.<br>Tuy nhiên trong bài viết này, tôi sẽ nói về git một cách “cá nhân” hơn, mang tính chia sẻ những cái tôi hay làm và hướng tới những người là sysadmin. Mong nhận được ý kiến đóng góp của các bạn.</p>
+<h4 id="Mot-so-khai-niem-can-lam-ro"><a href="#Mot-so-khai-niem-can-lam-ro" class="headerlink" title="Một số khái niệm cần làm rõ"></a>Một số khái niệm cần làm rõ</h4><p><strong><code>Git</code> và <code>Github</code> khác nhau như thế nào?</strong></p>
+<p>Lấy ví dụ, bạn có một đoạn script dài 20 dòng, hôm sau bạn tối ưu nó đi, chỉ còn 15 dòng, một ngày khác bạn sửa ở script đó một vài chỗ. Git ghi lại những thời điểm thay đổi đó của bạn và source code của bạn tại thời điểm đó.</p>
+<p>Github là một trang web, cho phép bạn lưu source code của mình lên đó. Sự kết hợp hoàn hảo giữa Git và Github mang lại một sự thuận tiện không hề nhỏ cho người dùng. Bạn có thể thay đổi đoạn code của mình mọi lúc mọi nơi mà không sợ bị ghi đè lên hay bị mất dữ liệu do hỏng hóc vì dữ liệu của bạn được lưu cả trên trang web Github và máy cá nhân. Bạn cũng có thể khôi phục được code của mình về một thời điểm bất kỳ nào đó.</p>
+<p>Github có bản free và mất phí. Với Github free thì source code của bạn sẽ công khai, có nghĩa là ai cũng có thể xem code của bạn. Nó phù hợp với các phần mềm nguồn mở, và cũng có thể trở thành một blog cá nhân của chính các bạn như các trang blogspot, wordpress,…</p>
+<p>Muốn có thể tạo một kho code bí mật của riêng mình thì bạn phải trả phí.</p>
+<p>Đối với cá nhân tôi thì github free là quá đủ cho mục đích lưu trữ và chia sẻ thông tin.</p>
+<p><strong>Cần phải làm gì để có thể sử dụng <code>Github</code>?</strong></p>
+<ul>
+<li>B1: Đăng ký một tài khoản tại <a href="https://github.com" target="_blank" rel="noopener">github</a> và đăng nhập</li>
+</ul>
+<p>Tôi chắc chắn rằng một khi bạn đã đọc đến đây thì bạn đã biết thực hiện bước trên như thế nào :)</p>
+<ul>
+<li>B2: Học cách sử dụng ngôn ngữ <code>Markdown</code></li>
+</ul>
+<p>Bạn có thể bỏ qua bước này nếu bạn đã biết hoặc các bạn xác định không sử dụng nó để viết.</p>
+<p>Theo cá nhân tôi thì các bạn nên viết bằng Markdown trong Github vì nó sẽ mang lại sự tường minh cho bài viết của bạn.</p>
+<p>Bạn chỉ cần bỏ ra khoảng 2h là đã có thể sử dụng ngôn ngữ này như ý muốn.</p>
+<ul>
+<li>B3: Tạo một repo đầu tiên và gõ Hello world bằng Markdown</li>
+</ul>
+<p>Sau đó tạo các repo tùy mục đích, clone nó về client và code.</p>
+<p>Bước này tôi sẽ hướng dẫn chi tiết hơn ở phần sau.</p>
+<p><a name="ngonngumarkdown"></a></p>
+<h2 id="II-Ngon-ngu-Markdown"><a href="#II-Ngon-ngu-Markdown" class="headerlink" title="II. Ngôn ngữ Markdown"></a>II. Ngôn ngữ Markdown</h2><p>Ngôn ngữ này khá đơn giản, bạn có thể đọc tại <a href="http://daringfireball.net/projects/markdown/syntax" target="_blank" rel="noopener">đây</a> để biết cách sử dụng.</p>
+<p>Nhưng với tôi, tôi không dùng hết từng ấy thứ cho nên tôi chỉ nhớ một số cái tôi hay dùng, cách tôi dùng như sau:</p>
+<p>Tạo một file có tên bất kỳ với đuôi .md. Có thể dùng <code>notepad</code>, <code>notepad++</code>, <code>vi</code>, <code>nano</code>,… hay bất cứ thứ gì mà bạn muốn.</p>
+<p>Một số phương pháp tôi hay sử dụng để viết:</p>
+<p><a name="thetieude"></a></p>
+<h3 id="1-The-tieu-de"><a href="#1-The-tieu-de" class="headerlink" title="1. Thẻ tiêu đề"></a>1. Thẻ tiêu đề</h3><p>Markdown sử dụng kí tự # để bắt đầu cho các thẻ tiêu đề, có thể dùng từ 1 đến 6 ký tự # liên tiếp. Mức độ riêu đề giảm dần từ 1 đến 6</p>
+<p>Tùy mục đích và ý thích bạn có thể sử dụng cách này để thể hiện các chỉ mục khác nhau.</p>
+<p>Ví dụ:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"># 1.Tiêu đề cấp 1</span></pre></td></tr></table></figure>
+
+<h1 id="1-Tieu-de-cap-1"><a href="#1-Tieu-de-cap-1" class="headerlink" title="1.Tiêu đề cấp 1"></a>1.Tiêu đề cấp 1</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">## 2.Tiêu đề cấp 2</span></pre></td></tr></table></figure>
+
+<h2 id="2-Tieu-de-cap-2"><a href="#2-Tieu-de-cap-2" class="headerlink" title="2.Tiêu đề cấp 2"></a>2.Tiêu đề cấp 2</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">###### 6.Tiêu đề cấp 6</span></pre></td></tr></table></figure>
+
+<h6 id="6-Tieu-de-cap-6"><a href="#6-Tieu-de-cap-6" class="headerlink" title="6.Tiêu đề cấp 6"></a>6.Tiêu đề cấp 6</h6><p><a name="chenlinkchenanh"></a></p>
+<h3 id="2-Chen-link-chen-anh"><a href="#2-Chen-link-chen-anh" class="headerlink" title="2. Chèn link, chèn ảnh"></a>2. Chèn link, chèn ảnh</h3><p>Để chèn hyperlink bạn chỉ cần paste luôn linh đó vào file .md</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">https:&#x2F;&#x2F;github.com</span></pre></td></tr></table></figure>
+
+<p><a href="https://github.com" target="_blank" rel="noopener">https://github.com</a></p>
+<p>Hoặc bạn cũng có thể sử dụng cú pháp sau để thu ngắn đường dẫn của link</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">[Github](https:&#x2F;&#x2F;github.com)</span></pre></td></tr></table></figure>
+
+<p>Kết quả là:</p>
+<p><a href="https://github.com" target="_blank" rel="noopener">Github</a></p>
+<p>Để chèn ảnh thì bạn hãy sử dụng cú pháp sau:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">&lt;img src&#x3D;&quot;link_anh_cua_ban&quot;&gt;</span></pre></td></tr></table></figure>
+
+<p>Tôi thường sử dụng công cụ <a href="https://app.prntscr.com/en/index.html" target="_blank" rel="noopener">Lightshot</a> để chụp ảnh màn hình và up hình đó lên trang <a href="http://i.imgur.com/" target="_blank" rel="noopener">http://i.imgur.com/</a> để lấy đường dẫn ảnh đưa vào Github</p>
+<p>Hai công cụ này khá dễ sử dụng, bạn chỉ cần chụp màn hình bằng Lightshot ấn Ctrl + C để copy và Ctrl + V để paste vào trình duyệt tại trang web <a href="http://i.imgur.com/" target="_blank" rel="noopener">http://i.imgur.com/</a></p>
+<p><a name="kytuindaminnghieng"></a></p>
+<h3 id="3-Ky-tu-in-dam-in-nghieng"><a href="#3-Ky-tu-in-dam-in-nghieng" class="headerlink" title="3. Ký tự in đậm, in nghiêng"></a>3. Ký tự in đậm, in nghiêng</h3><ul>
+<li>Để in đậm một đoạn text  bạn chỉ cần làm như sau:</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">**từ cần in đậm**</span></pre></td></tr></table></figure>
+
+<p><strong>từ cần in đậm</strong></p>
+<ul>
+<li>Để in nghiên một đoạn text  bạn chỉ cần làm như sau:</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">*từ cần in nghiêng*</span></pre></td></tr></table></figure>
+
+<p><em>từ cần in nghiêng</em></p>
+<p><a name="trichdanbochu"></a></p>
+<h3 id="4-Trich-dan-bo-chu"><a href="#4-Trich-dan-bo-chu" class="headerlink" title="4. Trích dẫn, bo chữ"></a>4. Trích dẫn, bo chữ</h3><p>Để bo một đoạn text thì bạn chỉ cần sử dụng cú pháp sau:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">&#96;đoạn cần bo&#96;</span></pre></td></tr></table></figure>
+
+<p>Kết quả là: <code>đoạn cần bo</code></p>
+<p>Để làm nổi bật một đoạn, chẳng hạn như một đoạn shell hay file cấu hình bạn có thể sử dụng cú pháp như ví dụ sau:</p>
+<pre><code><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">   auto eth0</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">   iface eth0 inet static</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">   ipaddress 10.10.10.10</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">netmask 255.255.255.0</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">gateway 10.10.10.1</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">dns-nameservers 8.8.8.8</span></pre></td></tr></table></figure></code></pre><p>Kết quả như sau:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">auto eth0</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">iface eth0 inet static</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">ipaddress 10.10.10.10</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">netmask 255.255.255.0</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">gateway 10.10.10.1</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">dns-nameservers 8.8.8.8</span></pre></td></tr></table></figure>
+
+<p><a name="gachdaudong"></a></p>
+<h3 id="5-Gach-dau-dong"><a href="#5-Gach-dau-dong" class="headerlink" title="5. Gạch đầu dòng"></a>5. Gạch đầu dòng</h3><p>Để sử dụng gạch đầu dòng bạn chỉ cần sử dụng cú pháp sau:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">- Gạch đầu dòng thứ nhất</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">  </span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">  - Thụt với đầu dòng 1</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">  </span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">  - Thụt với đầu dòng 1</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line"> </span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">- Gạch đầu dòng thứ hai</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">  </span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">  - Thụt với đầu dòng 2</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">  </span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">  - Thụt với đầu dòng 2</span></pre></td></tr></table></figure>
+
+<ul>
+<li><p>Gạch đầu dòng thứ nhất</p>
+<ul>
+<li><p>Thụt với đầu dòng 1</p>
+</li>
+<li><p>Thụt với đầu dòng 1</p>
+</li>
+</ul>
+</li>
+<li><p>Gạch đầu dòng thứ hai</p>
+<ul>
+<li><p>Thụt với đầu dòng 2</p>
+</li>
+<li><p>Thụt với đầu dòng 2</p>
+</li>
+</ul>
+</li>
+</ul>
+<p><a name="taobang"></a></p>
+<h3 id="6-Tao-bang"><a href="#6-Tao-bang" class="headerlink" title="6. Tạo bảng"></a>6. Tạo bảng</h3><p>Bạn có thể sử dụng cú pháp sau để tạo bảng:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">| Cột 1 Hàng 1 | Cột 2 | Cột 3| Cột 4 |</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">|--------------|-------|------|-------|</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">| Hàng 2 | 2 x 1 | 2 x 2 | 2 x 3 | 2 x 4 |</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">| Hàng 3 | 3 x 1 | 3 x 2 | 3 x 3 | 3 x 4 |</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">| Hàng 4 | 4 x 1 | 4 x 2 | 4 x 3 | 4 x 4 |</span></pre></td></tr></table></figure>
+
+<p>Kết quả:</p>
+<table>
+<thead>
+<tr>
+<th>Cột 1 Hàng 1</th>
+<th>Cột 2</th>
+<th>Cột 3</th>
+<th>Cột 4</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Hàng 2</td>
+<td>2 x 1</td>
+<td>2 x 2</td>
+<td>2 x 3</td>
+</tr>
+<tr>
+<td>Hàng 3</td>
+<td>3 x 1</td>
+<td>3 x 2</td>
+<td>3 x 3</td>
+</tr>
+<tr>
+<td>Hàng 4</td>
+<td>4 x 1</td>
+<td>4 x 2</td>
+<td>4 x 3</td>
+</tr>
+</tbody></table>
+<p><a name="meo"></a><br>###<em>Mẹo:</em></p>
+<ul>
+<li><p>Sử dụng trang <a href="http://markdownlivepreview.com/" target="_blank" rel="noopener">http://markdownlivepreview.com/</a> paste vào đó đoạn markdown bạn viết và xem trước để chỉnh sửa cho phù hợp.</p>
+</li>
+<li><p>Bạn cũng có thể sử dụng những đoạn markdown của người khác đã viết trước để tham khảo.</p>
+</li>
+</ul>
+<p>Như vậy bạn đã có thể trình bày github của mình một cách sáng sủa bằng markdown.</p>
+<p><a name="cacthaotacvoigitvagithub"></a></p>
+<h2 id="III-Cac-thao-tac-voi-Git-va-Github"><a href="#III-Cac-thao-tac-voi-Git-va-Github" class="headerlink" title="III. Các thao tác với Git và Github"></a>III. Các thao tác với Git và Github</h2><p><a name="repo"></a></p>
+<h3 id="0-Repo"><a href="#0-Repo" class="headerlink" title="0. Repo"></a>0. Repo</h3><p>Git là một công cụ để quản lý mã nguồn, nhưng tôi không phải là một coder nên tôi sẽ không sử dụng Git theo cách mà các coder hay sử dụng.<br>Tôi sử dụng git và github để lưu trữ các file cấu hình của mình, các script, viết các bài hướng dẫn, các bản nháp,…<br>Các repo là những nơi tôi phân loại, lưu trữ những thứ bên trên và nó được lưu cả ở máy trạm và ở server github.<br>Để làm việc với repo thì bạn phải hiểu về nó. Một số điều bạn cần biết là: </p>
+<p><strong>Ba trạng thái của một repo:</strong></p>
+<p><img alt="github" data-src="https://camo.githubusercontent.com/7267ce98820c8a0bc451c38809d7d58b84be5785/687474703a2f2f692e696d6775722e636f6d2f716b6d644a53522e706e67" class="lazyload"></p>
+<p>Như hình trên bạn có thể thấy có 3 điểm cần lưu ý:</p>
+<ul>
+<li><p>Working dir: đây là nơi bạn thực hiện các thao tác chỉnh sửa với file mã nguồn của mình, nó có thể là eclipse, netbean, notepad++,…</p>
+</li>
+<li><p>Stagging area: những sự thay đổi của bạn với file mã nguồn được lưu lại, giống như bạn ấn Save trong một file notepad.</p>
+</li>
+<li><p>Git directory: nơi lưu trữ mã nguồn của bạn (ở đây là github)</p>
+</li>
+</ul>
+<p>Tương ứng với 3 vị trí này ta có các hành động:</p>
+<ul>
+<li><p>Add: lưu file thay đổi (mang tính cục bộ) - tương ứng với câu lệnh <code>git add</code></p>
+</li>
+<li><p>Commit: Ghi lại trạng thái thay đổi tại máy local (ví dụ như bạn có thể ấn Save nhiều lần với file README.md nhưng chỉ khi commit thì trạng thái của lần ấn Save cuối cùng trước đó mới được lưu lại) - tương ứng với câu lệnh <code>git commit</code></p>
+</li>
+<li><p>Push: Đẩy những thay đổi từ máy trạm lên server - tương đương lệnh <code>git push</code></p>
+</li>
+<li><p>Pull: đồng bộ trạng thái từ server về máy trạm - tương đương lệnh <code>git pull</code></p>
+</li>
+</ul>
+<p><a name="caidat"></a></p>
+<h3 id="1-Cai-dat"><a href="#1-Cai-dat" class="headerlink" title="1. Cài đặt"></a>1. Cài đặt</h3><p><a name="linux"></a></p>
+<h4 id="1-1-Linux"><a href="#1-1-Linux" class="headerlink" title="1.1. Linux"></a>1.1. Linux</h4><p>Với OS là Ubuntu:</p>
+<blockquote>
+<p>apt-get install git</p>
+</blockquote>
+<p>Với OS là Fedora, Centos</p>
+<blockquote>
+<p>yum instal git</p>
+</blockquote>
+<p>Các thiết lập ban đầu:</p>
+<ul>
+<li>Bạn cần thiết lập tên và email của mình để mỗi khi commit lên server sẽ nhận biết được ai commit lên vì một repo có thể có nhiều người tham gia.</li>
+</ul>
+<blockquote>
+<p>git config –global user.name “Duc NC”</p>
+</blockquote>
+<blockquote>
+<p>git config –global user.email <a href="mailto:nguyencongduc3112@gmail.com" target="_blank" rel="noopener">nguyencongduc3112@gmail.com</a></p>
+</blockquote>
+<ul>
+<li>Lựa chọn trình soạn thảo mặc định, có thể là vi, vim, nano,…</li>
+</ul>
+<blockquote>
+<p>git config –global core.editor vi</p>
+</blockquote>
+<ul>
+<li>Liệt kê các thiết lập:</li>
+</ul>
+<blockquote>
+<p>git config –list</p>
+</blockquote>
+<p><strong>Liên kết với tài khoản github bằng SSH</strong></p>
+<blockquote>
+<p>ssh-keygen -t rsa</p>
+</blockquote>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">Enter file <span class="keyword">in</span> <span class="built_in">which</span> to save the key (/root/.ssh/id_rsa): [Press enter]</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">Enter passphrase (empty <span class="keyword">for</span> no passphrase): [Press enter]</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">Enter same passphrase again: [Press enter]</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">Your identification has been saved <span class="keyword">in</span> /root/.ssh/id_rsa.</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">Your public key has been saved <span class="keyword">in</span> /root/.ssh/id_rsa.pub.</span></pre></td></tr></table></figure>
+
+<p>Nếu bạn nhập passphrase thì hãy nhớ pass này!</p>
+<p>Kết quả:</p>
+<blockquote>
+<p>ls ~/.ssh/</p>
+</blockquote>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">id_rsa       id_rsa.pub   known_hosts</span></pre></td></tr></table></figure>
+
+<blockquote>
+<p>ssh-agent -s</p>
+</blockquote>
+<blockquote>
+<p>ssh-add ~/.ssh/id_rsa</p>
+</blockquote>
+<blockquote>
+<p>cat ~/.ssh/id_rsa.pub</p>
+</blockquote>
+<p>copy đoạn mã này</p>
+<p>Truy cập đường dẫn sau <a href="https://github.com/settings/ssh" target="_blank" rel="noopener">https://github.com/settings/ssh</a> (đảm bảo bạn đã đăng nhập vào github), chọn Add SSH key, đặt tên cho key này tại <code>Title</code> và paste nội dung vừa copy vào ô <code>Key</code></p>
+<p><img alt="github" data-src="https://camo.githubusercontent.com/c35e7a87819596bebc9e28e8d16c654af2c28df7/687474703a2f2f692e696d6775722e636f6d2f7a757861765a352e706e67" class="lazyload"></p>
+<p>Lúc này bạn đã có thể commit lên github tại máy local mà không cần nhập username và password.</p>
+<p><a name="windows"></a></p>
+<h4 id="1-2-Windows"><a href="#1-2-Windows" class="headerlink" title="1.2. Windows"></a>1.2. Windows</h4><p>Download tại địa chỉ: <a href="https://windows.github.com/" target="_blank" rel="noopener">https://windows.github.com/</a></p>
+<p>Cài đặt bình thường, yêu cầu phải có .NET 4.5</p>
+<p>Giao diện của chương trình:</p>
+<p><img alt="github" data-src="https://camo.githubusercontent.com/58b5fedd92a98e6f20a1d29b6a13e29f23d28edc/687474703a2f2f692e696d6775722e636f6d2f45627836644a442e706e67" class="lazyload"></p>
+<p>Thêm tài khoản Github:</p>
+<ul>
+<li><p>Click vào tool and options (hình bánh răng cạnh biểu tượng Sync) chọn options, Add account. Khai báo username và password trên github.</p>
+</li>
+<li><p>Tại mục Configure git thêm Tên và email của mình</p>
+</li>
+</ul>
+<p><img alt="github" data-src="https://camo.githubusercontent.com/ed31aeacc9af0413fd01a1dd09d5f799504c2181/687474703a2f2f692e696d6775722e636f6d2f44534c503630692e706e67" class="lazyload"></p>
+<p>Click Update</p>
+<p><a name="thaotacvoirepo"></a></p>
+<h3 id="2-Thao-tac-voi-Repo"><a href="#2-Thao-tac-voi-Repo" class="headerlink" title="2. Thao tác với Repo"></a>2. Thao tác với Repo</h3><p><a name="21trenlinux"></a></p>
+<h4 id="2-1-Tren-Linux"><a href="#2-1-Tren-Linux" class="headerlink" title="2.1. Trên Linux"></a>2.1. Trên Linux</h4><p><a name="211taomoi"></a></p>
+<h5 id="2-1-1-Tao-moi"><a href="#2-1-1-Tao-moi" class="headerlink" title="2.1.1. Tạo mới"></a>2.1.1. Tạo mới</h5><p>Tạo một repo mới trên trang github.com</p>
+<p><img alt="github" data-src="https://camo.githubusercontent.com/9aa3b64890ea8ff7e8520d6857db5fd71c839319/687474703a2f2f692e696d6775722e636f6d2f616c5246574b6c2e706e67" class="lazyload"></p>
+<p><img alt="github" data-src="https://camo.githubusercontent.com/33ade8c1712f9e55e9f9a91ee454b365204fb68c/687474703a2f2f692e696d6775722e636f6d2f4d4a5a6a594d6d2e706e67" class="lazyload"></p>
+<p><a name="212clone"></a></p>
+<h5 id="2-1-2-Clone"><a href="#2-1-2-Clone" class="headerlink" title="2.1.2. Clone"></a>2.1.2. Clone</h5><p>Clone repo đó về bằng một trong các cách sau:</p>
+<p><strong>Linux</strong></p>
+<p><strong><em>SSH:</em></strong><br><code>git clone git@github.com:ducnc92/demo1.git</code></p>
+<p>hoặc: <code>git clone git@github.com:ducnc92/demo1.git /opt/demo</code> để clone vào thư mục /opt/demo</p>
+<p>đối với phương pháp này các bạn cần nhập passphrase của ~/.ssh/id_rsa (có thể không cần nếu bạn không đặt passphrase)</p>
+<p><strong><em>HTTPS:</em></strong><br><code>git clone https://github.com/ducnc92/demo1.git</code></p>
+<p>hoặc: <code>git clone https://github.com/ducnc92/demo1.git /opt/demo</code> để clone vào thư mục /opt/demo</p>
+<p>Để lấy các link SSH, HTTPS này ta làm như sau: Click vào các hyperlink HTTPS hoặc SSH rồi click Copy to clipboard.</p>
+<p><img alt="github" data-src="https://camo.githubusercontent.com/e26cdd17e33c7669d443d46461973359c0173b48/687474703a2f2f692e696d6775722e636f6d2f31446f7a41567a2e706e67" class="lazyload"></p>
+<p>Ở đây tôi sử dụng lệnh <code>git clone git@github.com:ducnc92/demo1.git</code></p>
+<p>Lúc này trong thư mục hiện tại sẽ có thêm thư mục demo1 chứa các file trong repo trên github.</p>
+<p>Chuyển vào thư mục này:</p>
+<blockquote>
+<p>cd demo1/</p>
+</blockquote>
+<blockquote>
+<p>ls</p>
+</blockquote>
+<p>Lúc này sẽ thấy trong thư mục này có file <code>README.md</code>. Để sửa file này ta có thể sử dụng bất cứ trình soạn thảo nào, chẳng hạn vi, nano, gedit,…</p>
+<blockquote>
+<p>vi README.md</p>
+</blockquote>
+<p>Thêm vào nội dung như sau:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">Xin chao!</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">Toi la Ducnc.</span></pre></td></tr></table></figure>
+
+<p>Tạo một thư mục mới, chẳng hạn tên là script để chứa các script của tôi.</p>
+<blockquote>
+<p>mkdir script</p>
+</blockquote>
+<p>Tạo một script mới trong thư mục đó.</p>
+<blockquote>
+<p>vi script/script1.sh</p>
+</blockquote>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/sh</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">"Hello Python Vietnam"</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">sleep 10</span></pre></td></tr></table></figure>
+
+<p>bằng cách tương tự các bạn có thể tạo thêm nhiều thư mục, file hướng dẫn, cấu hình, script,… tùy ý</p>
+<p><a name="213addcommitpush"></a></p>
+<h5 id="2-1-3-Add-commit-push"><a href="#2-1-3-Add-commit-push" class="headerlink" title="2.1.3. Add, commit, push"></a>2.1.3. Add, commit, push</h5><p>Để thực hiện hành động <code>add</code> ta sử dụng lệnh sau</p>
+<blockquote>
+<p>git add README.md<br>để <code>add</code> file README.md</p>
+</blockquote>
+<p>hoặc <code>git add *</code> để add tất cả các file hiện có.</p>
+<p>Để thự hiện hành động commit file README.md ta thực hiện lệnh</p>
+<blockquote>
+<p>git commit README.md</p>
+</blockquote>
+<p>hoặc <code>git commit *</code> để commit tất cả.</p>
+<p>ta nên thêm tham số -m để ghi lại một comment cho hành động đó</p>
+<blockquote>
+<p>git commit README.md -m “ducnc sua doi” </p>
+</blockquote>
+<p>Lúc này các thay đổi của bạn đã được lưu lại trên máy cục bộ. Để đồng bộ lên server Github ta thực hiện lệnh:</p>
+<blockquote>
+<p>git push origin master</p>
+</blockquote>
+<p>=&gt; nhập passphrase (nếu bạn đặt passphrase ở mục 1.1.) với phương pháp clone ssh hoặc nhập username, password nếu clone bằng https</p>
+<p><img alt="github" data-src="https://camo.githubusercontent.com/6e4b8ef711b58d97bdd5658915ded7a9801d53d0/687474703a2f2f692e696d6775722e636f6d2f564f50537a42542e706e67" class="lazyload"></p>
+<p>Lúc này trở lại trang github.com và xem <code>repo script</code> lúc đầu sẽ thấy các commit của ta đã được đẩy lên.</p>
+<p><img alt="github" data-src="https://camo.githubusercontent.com/33b4a7756dfe36d6526aaee859681f701735355a/687474703a2f2f692e696d6775722e636f6d2f544e417a79356d2e706e67" class="lazyload"></p>
+<p>Một cách khác nếu bạn không muốn thực hiện clone về máy như bước trên thì bạn có thể làm như sau:</p>
+<ul>
+<li><p>Tạo một repo mới trên github.com mà không tạo file README.md (giả sử ở đây là repo demo2)</p>
+</li>
+<li><p>Tại máy local tạo một thư mục để chứa repo mới này. Ví dụ:</p>
+</li>
+</ul>
+<blockquote>
+<p>mkdir /opt/demo2</p>
+</blockquote>
+<blockquote>
+<p>cd /opt/demo2</p>
+</blockquote>
+<ul>
+<li>Thực hiện tạo các file, thư mục như ý muốn. Sau đó thực hiện add, commit, push tương tự như trên<br>Nhưng ở đây cần thêm lệnh <code>git remote add origin $git-url</code> trước khi push. Tham khảo ví dụ sau:</li>
+</ul>
+<blockquote>
+<p>vi README.md</p>
+</blockquote>
+<blockquote>
+<p>git add README.md</p>
+</blockquote>
+<blockquote>
+<p>git commit README.md</p>
+</blockquote>
+<p>hoặc <code>git commit README.md -m noi dung</code></p>
+<blockquote>
+<p>git remote add origin <a href="mailto:git@github.com" target="_blank" rel="noopener">git@github.com</a>:ducnc92/demo2.git</p>
+</blockquote>
+<blockquote>
+<p>git push origin master</p>
+</blockquote>
+<p>Sau đó nhập passphrase(nếu cần) hoặc username + password (nếu sử dụng SSH)</p>
+<p><a name="214pull"></a></p>
+<h5 id="2-1-4-Pull"><a href="#2-1-4-Pull" class="headerlink" title="2.1.4. Pull"></a>2.1.4. Pull</h5><p>Giả sử trên server github của bạn có những thay đổi mà máy local chưa cập nhật những thay đổi đó. Bạn thực hiện lệnh sau:</p>
+<blockquote>
+<p>cd cd /opt/demo1/</p>
+</blockquote>
+<blockquote>
+<p>git pull</p>
+</blockquote>
+<p><a name="22trenwindows"></a></p>
+<h4 id="2-2-Tren-Windows"><a href="#2-2-Tren-Windows" class="headerlink" title="2.2. Trên Windows"></a>2.2. Trên Windows</h4><p><a name="221taomotrepomoi"></a></p>
+<h5 id="2-2-1-Tao-mot-repo-moi"><a href="#2-2-1-Tao-mot-repo-moi" class="headerlink" title="2.2.1. Tạo một repo mới"></a>2.2.1. Tạo một repo mới</h5><p>Tạo repo trên github.com tự như mục 2.1.1.</p>
+<p>Tạo repo bằng phần mềm Github</p>
+<ul>
+<li>Click vào dấu cộng, chọn tab Create, đặt tên và chọn đường dẫn cho repo mới</li>
+</ul>
+<p><img alt="github" data-src="https://camo.githubusercontent.com/0736481c445eccf6136f085a8e9677ca7c7b22c7/687474703a2f2f692e696d6775722e636f6d2f4d5872705a5a752e706e67" class="lazyload"></p>
+<ul>
+<li>Tuy nhiên repo mới sinh ra mới chỉ có ở máy trạm, tại mục <code>Other</code>. Chọn chuột phải vào repo đó và chọn <code>Open in Explorer</code> để sửa nội dung của repo này.</li>
+</ul>
+<p><img alt="github" data-src="https://camo.githubusercontent.com/c75286677894c52c2857c226af9b286d853b1ca2/687474703a2f2f692e696d6775722e636f6d2f7634446b6469772e706e67" class="lazyload"></p>
+<ul>
+<li>Sau khi chỉnh sửa xong, để đẩy repo đó lên github.com ta click vào <code>Publish this repository</code> và thực hiện như hình sau. Chú ý cần chọn Organization đặt repo này.</li>
+</ul>
+<p><img alt="github" data-src="https://camo.githubusercontent.com/0272461f8ac66b6f5947009492a133e37b16c629/687474703a2f2f692e696d6775722e636f6d2f366b586544664c2e706e67" class="lazyload"></p>
+<p><a name="222clone"></a></p>
+<h5 id="2-2-2-Clone"><a href="#2-2-2-Clone" class="headerlink" title="2.2.2. Clone"></a>2.2.2. Clone</h5><p>Click vào dấu cộng, chọn tab Clone, lựa chọn tổ chức mong muốn và chọn repo cần clone</p>
+<p><img alt="github" data-src="https://camo.githubusercontent.com/c4302bda4555680018816b67ebecc331b8246578/687474703a2f2f692e696d6775722e636f6d2f596c72544f7a512e706e67" class="lazyload"></p>
+<p>Để chỉnh sửa nội dung của repo này ta chọn chuột phải vào nó và chọn <code>Open in Explorer</code></p>
+<p><img alt="github" data-src="https://camo.githubusercontent.com/d34cb73bfee2fd0331365cf459ff1dc613c311b1/687474703a2f2f692e696d6775722e636f6d2f5878384a4f52352e706e67" class="lazyload"></p>
+<p>Lúc đó chương trình Windows Explorer sẽ mở ra thư mục chứa repo của github, bạn có thể chỉnh sửa các file trong này, tạo xóa thư mục,… một cách bình thường.</p>
+<p><a name="223"></a></p>
+<h5 id="2-2-3-Add-commit-push-pull"><a href="#2-2-3-Add-commit-push-pull" class="headerlink" title="2.2.3. Add, commit, push, pull"></a>2.2.3. Add, commit, push, pull</h5><p>Trở lại với chương trình Github ta sẽ thấy dòng <code>uncommited changes</code> tại repo ta vừa sửa. Bạn hãy điền vào đó comment và ấn <code>commit to master</code></p>
+<p><img alt="github" data-src="https://camo.githubusercontent.com/bc970eda541312a96a103ce1a39af1df91bc1047/687474703a2f2f692e696d6775722e636f6d2f4e57583452494d2e706e67" class="lazyload"></p>
+<p>Lúc này sự thay đổi của bạn với mã nguồn đã được ghi lại trên máy local, để đồng bộ nó lên server github bạn hãy ấn vào biểu tượng <code>Sync</code> ở góc trên cùng bên phải.</p>
+<p>Sau khi đồng bộ xong, quay trở lại repo trên trang github.com.</p>
+<p><img alt="github" data-src="https://camo.githubusercontent.com/7301174016243200830794d998faeb9fd1e7af2e/687474703a2f2f692e696d6775722e636f6d2f7846636e6d73492e706e67" class="lazyload"></p>
+<p>Để đồng bộ những thay đổi trên github.com về máy local (pull) ta cũng click vào biểu tượng <code>Sync</code> như bên trên.</p>
+<p><a name="3"></a></p>
+<h3 id="3-Thao-tac-voi-to-chuc-trong-Github"><a href="#3-Thao-tac-voi-to-chuc-trong-Github" class="headerlink" title="3. Thao tác với tổ chức trong Github"></a>3. Thao tác với tổ chức trong Github</h3><p>Để tạo một nhóm cho nhiều người cùng làm việc ta làm như sau:</p>
+<ul>
+<li><p>Truy cập URL: <a href="https://github.com/settings/organizations" target="_blank" rel="noopener">https://github.com/settings/organizations</a>, chọn New Organizations</p>
+</li>
+<li><p>Đặt tên và email cho tổ chức</p>
+</li>
+</ul>
+<p><img alt="github" data-src="https://camo.githubusercontent.com/dba455a769d2a5c16e65978fb6b67089c61f433f/687474703a2f2f692e696d6775722e636f6d2f497648656357652e706e67" class="lazyload"></p>
+<p>Tại mục <code>Choose the organization’s plan</code> chọn Open Source để miễn phí, nhưng lúc này các Repo trong tổ chức sẽ là public.</p>
+<ul>
+<li>Mời các thành viên cho tổ chức</li>
+</ul>
+<p><img alt="github" data-src="https://camo.githubusercontent.com/938a1967fd1c18ac6b9eb7ff2efaeef8c59366e7/687474703a2f2f692e696d6775722e636f6d2f78563343756b632e706e67" class="lazyload"></p>
+<p>Lúc này vào trang cá nhân của bạn sẽ thấy tại mục Organizations có tổ chức mới vừa tạo. Để cấu hình tổ chức này ta click thẳng vào nó.</p>
+<p>Ở đây tôi sẽ tạo một team mới như hình sau:</p>
+<p><img alt="github" data-src="https://camo.githubusercontent.com/22088fab52bd8e29fe1a9ef5f6d7285d237fe6ee/687474703a2f2f692e696d6775722e636f6d2f376b574c4e59452e706e67" class="lazyload"></p>
+<p><img alt="github" data-src="https://camo.githubusercontent.com/daf9deade83a8e0aefcfba21fd00f187d4550c63/687474703a2f2f692e696d6775722e636f6d2f7a4f336b767a5a2e706e67" class="lazyload"></p>
+<p>Các member của team này có quyền write với các repo của team.</p>
+<p>Với 3 mức: Read Access, Write Access, Admin Access Github cho phép chúng ta phân quyền tới các thành viên của nhóm.</p>
+<p>Để mời một người dùng khác vào team, ta click vào team đó và search tên của người dùng cần tìm</p>
+<p><img alt="github" data-src="https://camo.githubusercontent.com/73070ffe87ce06e0ee497cbd9a8b48ce14aa05bc/687474703a2f2f692e696d6775722e636f6d2f557365703947502e706e67" class="lazyload"></p>
+<p>Sau đó hệ thống sẽ yêu cầu bạn nhập password để xác thực, nếu thành công, một email xác nhận sẽ được gửi đến người được mời và người này sẽ xác nhận có tham gia vào tổ chức hay không.</p>
+<p>Để tạo một repo cho tổ chức, ta chỉ cần click vào tổ chức đó, sau đó chọn <code>Create new Repostory</code>. Các hành động clone, add, commit,… làm như bình thường.</p>
+<p><a name="4"></a></p>
+<h3 id="4-Thao-tac-voi-nhanh-branch"><a href="#4-Thao-tac-voi-nhanh-branch" class="headerlink" title="4. Thao tác với nhánh (branch)"></a>4. Thao tác với nhánh (branch)</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">Sẽ cập nhật và bổ sung sau</span></pre></td></tr></table></figure>
+
+<p><a name="5"></a></p>
+<h3 id="5-Issues"><a href="#5-Issues" class="headerlink" title="5. Issues"></a>5. Issues</h3><p>Giả sử bạn đang theo dõi repo của tôi và thấy có một số chỗ cần sửa đổi, bạn có thể comment ý kiến của mình vào Repo đó. Sau đó người quản trị sẽ xem xét, thay đổi và trả lời bạn.</p>
+<p>Để làm việc này bạn cần vào repo đó, click vào <code>Issue</code>. Ví dụ như hình sau:</p>
+<p><img alt="github" data-src="https://camo.githubusercontent.com/df3b1d430aa429eaccf74a4717483cd8ffe4125f/687474703a2f2f692e696d6775722e636f6d2f4a4769587437362e706e67" class="lazyload"></p>
+<p>Sau đó chọn <code>New issue</code> (màu xanh) để tạo một issue mới.</p>
+<p><img alt="github" data-src="https://camo.githubusercontent.com/14f3b5497be1a1ff7ca164be1bde725471f92349/687474703a2f2f692e696d6775722e636f6d2f52546838516a562e706e67" class="lazyload"></p>
+<p>Lúc này tại Repo của người quản trị sẽ thấy một Issue mới, người quản trị có thể click vào Issue này để xem, sau đó xem xét sửa đổi, comment lại. Khi sửa đổi hoàn tất thì sẽ đóng issue đó lại.</p>
+<p><img alt="github" data-src="https://camo.githubusercontent.com/3decfc9c6b0ed86b28263af42353d3a1d4cf0e6c/687474703a2f2f692e696d6775722e636f6d2f6a38696f5a67412e706e67" class="lazyload"></p>
+<p><img alt="github" data-src="https://camo.githubusercontent.com/1b4d3b1d674b3e80fc5063f3904e6b3645c60804/687474703a2f2f692e696d6775722e636f6d2f664a726f4d74652e706e67" class="lazyload"></p>
+<p>Bằng cách tạo issue, bạn có thể đăng các câu hỏi, thắc mắc của mình cho chủ của repo đó.</p>
+<p><a name="Tongket"></a></p>
+</div></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="mailto:undefined" target="_blank" rel="noopener">Eopi Noriko</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="/https:/eopi.loliteam.net/2019/12/05/github/">https://eopi.loliteam.net/2019/12/05/github/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Git/">Git    </a><a class="post-meta__tags" href="/tags/Github/">Github    </a><a class="post-meta__tags" href="/tags/Sysadmin/">Sysadmin    </a></div><div class="post_share"><div class="social-share" data-image="/img/github.jpg" data-sites="facebook,twitter"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/css/share.min.css"><script src="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/js/social-share.min.js"></script></div></div><nav class="pagination_post" id="pagination"><div class="next-post pull-full"><a href="/2019/12/05/docker8/"><img class="next_cover lazyload" data-src="/img/docker.png" onerror="onerror=null;src='/img/404.jpg'"><div class="label">Bài tiếp theo</div><div class="next_info"><span>8. Thao tác với container</span></div></a></div></nav></div></div><footer id="footer" style="background-image: url(/img/github.jpg)"><div id="footer-wrap"><div class="copyright">&copy;2019 By Eopi Noriko</div><div class="framework-info"><span>Driven </span><a href="http://hexo.io" target="_blank" rel="noopener"><span>Hexo</span></a><span class="footer-separator">|</span><span>Theme </span><a href="https://github.com/jerryc127/hexo-theme-butterfly" target="_blank" rel="noopener"><span>Butterfly</span></a></div></div></footer></div><section class="rightside" id="rightside"><div id="rightside-config-hide"><i class="fa fa-book" id="readmode" title="Read Mode"></i><i class="fa fa-plus" id="font_plus" title="Increase font size"></i><i class="fa fa-minus" id="font_minus" title="Decrease font size"></i><i class="darkmode fa fa-moon-o" id="darkmode" title="Dark Mode"></i></div><div id="rightside-config-show"><div id="rightside_config" title="Setting"><i class="fa fa-cog" aria-hidden="true"></i></div><i class="fa fa-list-ul close" id="mobile-toc-button" title="Table of Contents" aria-hidden="true"></i><i class="fa fa-arrow-up" id="go-up" title="Back to top" aria-hidden="true"></i></div></section><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/medium-zoom/dist/medium-zoom.min.js"></script><script async src="/js/search/local-search.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.15/dist/snackbar.min.js"></script><script id="ribbon" src="/js/third-party/canvas-ribbon.js" size="150" alpha="0.7" zIndex="-1" mobile="true" data-click="true"></script><script id="ribbon_piao" mobile="true" src="/js/third-party/piao.js"></script><script id="canvas_nest" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="/js/third-party/canvas-nest.js"></script><script src="/js/third-party/activate-power-mode.js"></script><script>POWERMODE.colorful = true; // make power mode colorful
+POWERMODE.shake = true; // turn off shake
+document.body.addEventListener('input', POWERMODE);
+</script><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@latest/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/lazysizes@latest/lazysizes.min.js" async=""></script><script src="/js/third-party/click_heart.js"></script><script src="/js/third-party/ClickShowText.js"></script><div class="search-dialog" id="local-search"><div class="search-dialog__title" id="local-search-title">Tìm Kiếm</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="Tìm kiếm Bài viết"></div></div></div><hr><div id="local-search-results"><div id="local-hits"></div><div id="local-stats"><div class="local-search-stats__hr" id="hr"><span>Powered by</span> <a href="https://github.com/wzpan/hexo-generator-search" target="_blank" rel="noopener" style="color:#49B1F5;">hexo-generator-search</a></div></div></div><span class="search-close-button"><i class="fa fa-times"></i></span></div><div class="search-mask"></div></body></html>
